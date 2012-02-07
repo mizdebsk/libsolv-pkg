@@ -1,0 +1,15 @@
+diff -up libsolv/bindings/solv.i.newruby libsolv/bindings/solv.i
+--- libsolv/bindings/solv.i.newruby	2012-02-07 20:15:17.909237059 +0100
++++ libsolv/bindings/solv.i	2012-02-07 20:15:53.612790703 +0100
+@@ -143,9 +143,9 @@
+   int size, i;
+   VALUE *o;
+   queue_init(&$1);
+-  size = RARRAY($input)->len;
++  size = RARRAY_LEN($input);
+   i = 0;
+-  o = RARRAY($input)->ptr;
++  o = RARRAY_PTR($input);
+   for (i = 0; i < size; i++, o++) {
+     int v;
+     int e = SWIG_AsVal_int(*o, &v);

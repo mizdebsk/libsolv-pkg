@@ -7,12 +7,14 @@
 
 Name:		libsolv
 Version:	0.0.0
-Release:	1.git%{gitrev}%{?dist}
+Release:	2.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
 # git archive %{gitrev} --prefix=libsolv/ | xz > libsolv-%{gitrev}.tar.xz
 Source:		libsolv-%{gitrev}.tar.xz
+Patch0:		libsolv-rubyinclude.patch
+Patch1:		libsolv-newruby.patch
 Group:		Development/Libraries
 Summary:	Package dependency solver
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
@@ -79,6 +81,8 @@ Perl bindings for sat solver.
 
 %prep
 %setup -q -n libsolv
+%patch0 -p1 -b .rubyinclude
+%patch1 -p1 -b .newruby
 
 %build
 %cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -137,6 +141,10 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %{python_sitearch}/*
 
 %changelog
+* Tue Feb  7 2012 Karel Klíč <kklic@redhat.com> - 0.0.0-2.git857fe28%{?dist}
+- Adapted to Ruby 1.9.3 (workaround for broken CMake in Fedora and
+  ruby template correction in bindings)
+
 * Thu Feb  2 2012 Karel Klíč <kklic@redhat.com> - 0.0.0-1.git857fe28
 - Initial packaging
 - Based on Jindra Novy's spec file
