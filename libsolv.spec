@@ -1,4 +1,4 @@
-%global gitrev 857fe28
+%global gitrev 80afaf7
 %{!?ruby_sitearch: %global ruby_sitearch %(ruby -rrbconfig -e 'puts Config::CONFIG["sitearchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
@@ -96,6 +96,7 @@ make %{?_smp_mflags}
 
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
+rm $RPM_BUILD_ROOT/usr/bin/testsolv
 
 %post -p /sbin/ldconfig
 
@@ -141,6 +142,9 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %{python_sitearch}/*
 
 %changelog
+* Wed Mar 21 2012 Aleš Kozumplík <akozumpl@redhat.com> - 0.0.0-3.git%{gitrev}%{?dist}
+- New upstream version.
+
 * Tue Feb  7 2012 Karel Klíč <kklic@redhat.com> - 0.0.0-2.git857fe28%{?dist}
 - Adapted to Ruby 1.9.3 (workaround for broken CMake in Fedora and
   ruby template correction in bindings)
