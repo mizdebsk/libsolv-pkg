@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.0.0
-Release:	4.git%{gitrev}%{?dist}
+Release:	5.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -142,6 +142,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Mon Apr  2 2012 Karel Klíč <kklic@redhat.com> - 0.0.0-5.git80afaf7%{?dist}
+- Rebuild for the new rpm package.
+
 * Wed Mar 21 2012 Aleš Kozumplík <akozumpl@redhat.com> - 0.0.0-4.git%{gitrev}%{?dist}
 - New upstream version, fix the .rpm release number.
 
