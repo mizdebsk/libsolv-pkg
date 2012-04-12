@@ -1,4 +1,4 @@
-%global gitrev 80afaf7
+%global gitrev af1465a2
 %{!?ruby_sitearch: %global ruby_sitearch %(ruby -rrbconfig -e 'puts Config::CONFIG["sitearchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.0.0
-Release:	6.git%{gitrev}%{?dist}
+Release:	7.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -15,6 +15,7 @@ Url:		https://github.com/openSUSE/libsolv
 Source:		libsolv-%{gitrev}.tar.xz
 Patch0:		libsolv-rubyinclude.patch
 Patch1:		libsolv-newruby.patch
+Patch2:		libsolv-repo_add_solv_without_stub.patch
 Group:		Development/Libraries
 Summary:	Package dependency solver
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
@@ -83,6 +84,7 @@ Perl bindings for sat solver.
 %setup -q -n libsolv
 %patch0 -p1 -b .rubyinclude
 %patch1 -p1 -b .newruby
+%patch2 -p1 -b .withoutstub
 
 %build
 %cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -142,16 +144,20 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Thu Apr  12 2012 Aleš Kozumplik <akozumpl@redhat.com> - 0.0.0-7.gitaf1465a2%{?dist}
+- Rebase to the upstream.
+- Make repo_add_solv() work without stub repodata.
+
 * Thu Apr  5 2012 Karel Klíč <kklic@redhat.com> - 0.0.0-6.git80afaf7%{?dist}
 - Rebuild for the new libdb package.
 
 * Mon Apr  2 2012 Karel Klíč <kklic@redhat.com> - 0.0.0-5.git80afaf7%{?dist}
 - Rebuild for the new rpm package.
 
-* Wed Mar 21 2012 Aleš Kozumplík <akozumpl@redhat.com> - 0.0.0-4.git%{gitrev}%{?dist}
+* Wed Mar 21 2012 Aleš Kozumplík <akozumpl@redhat.com> - 0.0.0-4.git80afaf7%{?dist}
 - New upstream version, fix the .rpm release number.
 
-* Wed Mar 21 2012 Aleš Kozumplík <akozumpl@redhat.com> - 0.0.0-3.git%{gitrev}%{?dist}
+* Wed Mar 21 2012 Aleš Kozumplík <akozumpl@redhat.com> - 0.0.0-3.git80afaf7%{?dist}
 - New upstream version.
 
 * Tue Feb  7 2012 Karel Klíč <kklic@redhat.com> - 0.0.0-2.git857fe28%{?dist}

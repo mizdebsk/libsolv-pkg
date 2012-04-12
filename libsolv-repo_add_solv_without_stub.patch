@@ -1,0 +1,30 @@
+From 6b63ea994945195f02d8a04d2786959ed438f484 Mon Sep 17 00:00:00 2001
+From: Ales Kozumplik <akozumpl@redhat.com>
+Date: Thu, 12 Apr 2012 10:29:28 +0200
+Subject: [PATCH] make repo_add_solv() work without stub repodata.
+
+---
+ src/repo_solv.c |    7 ++++++-
+ 1 files changed, 6 insertions(+), 1 deletions(-)
+
+diff --git a/src/repo_solv.c b/src/repo_solv.c
+index 3f391ef..4e632ae 100644
+--- a/src/repo_solv.c
++++ b/src/repo_solv.c
+@@ -514,7 +514,12 @@ repo_add_solv(Repo *repo, FILE *fp, int flags)
+       extendstart = repo->start;
+       extendend = repo->end;
+     }
+-    
++  else if ((flags & REPO_EXTEND_SOLVABLES) != 0)
++    {
++      parent = repo_add_repodata(repo, flags);
++      repodata_extend_block(parent, repo->start, repo->nsolvables);
++    }
++
+   memset(&data, 0, sizeof(data));
+   data.repo = repo;
+   data.fp = fp;
+-- 
+1.7.7.3
+
