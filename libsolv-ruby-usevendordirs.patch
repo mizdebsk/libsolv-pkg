@@ -1,0 +1,15 @@
+diff -up libsolv/bindings/ruby/CMakeLists.txt.ruby-usevendordirs libsolv/bindings/ruby/CMakeLists.txt
+--- libsolv/bindings/ruby/CMakeLists.txt.ruby-usevendordirs	2012-05-18 12:54:34.483906092 +0200
++++ libsolv/bindings/ruby/CMakeLists.txt	2012-05-18 12:55:11.108000512 +0200
+@@ -1,10 +1,6 @@
+ FIND_PACKAGE (Ruby)
+ 
+-IF (USE_VENDORDIRS)
+-    SET (RUBY_INSTALL_DIR ${RUBY_VENDORARCH_DIR})
+-ELSE (USE_VENDORDIRS)
+-    SET (RUBY_INSTALL_DIR ${RUBY_SITEARCH_DIR})
+-ENDIF (USE_VENDORDIRS)
++SET (RUBY_INSTALL_DIR ${RUBY_SITEARCH_DIR})
+ 
+ EXECUTE_PROCESS(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "print Config::CONFIG['arch']"
+    OUTPUT_VARIABLE RUBY_ARCH)

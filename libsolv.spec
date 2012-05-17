@@ -1,4 +1,4 @@
-%global gitrev af1465a2
+%global gitrev 8cf7650
 %{!?ruby_sitearch: %global ruby_sitearch %(ruby -rrbconfig -e 'puts Config::CONFIG["sitearchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.0.0
-Release:	7.git%{gitrev}%{?dist}
+Release:	9.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -15,7 +15,7 @@ Url:		https://github.com/openSUSE/libsolv
 Source:		libsolv-%{gitrev}.tar.xz
 Patch0:		libsolv-rubyinclude.patch
 Patch1:		libsolv-newruby.patch
-Patch2:		libsolv-repo_add_solv_without_stub.patch
+Patch2:		libsolv-ruby-usevendordirs.patch
 Group:		Development/Libraries
 Summary:	Package dependency solver
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
@@ -33,8 +33,8 @@ library is based on two major, but independent, blocks:
 %package devel
 Summary:	A new approach to package dependency solving
 Group:		Development/Libraries
-Requires:	libsolv-tools%{?_isa} = %version
-Requires:	libsolv%{?_isa} = %version
+Requires:	libsolv-tools%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	libsolv%{?_isa} = %{epoch}:%{version}-%{release}
 Requires:	rpm-devel%{?_isa}
 Requires:	cmake
 
@@ -45,6 +45,7 @@ Development files for libsolv,
 Summary:	A new approach to package dependency solving
 Group:		Development/Libraries
 Requires:	gzip bzip2 coreutils
+Requires:	libsolv%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description tools
 Package dependency solver tools.
@@ -84,7 +85,7 @@ Perl bindings for sat solver.
 %setup -q -n libsolv
 %patch0 -p1 -b .rubyinclude
 %patch1 -p1 -b .newruby
-%patch2 -p1 -b .withoutstub
+%patch2 -p1 -b .ruby-usevendordirs
 
 %build
 %cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -144,6 +145,10 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Thu May  17 2012 Aleš Kozumplik <akozumpl@redhat.com> - 0.0.0-9.git8cf7650%{?dist}
+- Rebase to upstream 8cf7650.
+- ruby bindings: fix USE_VENDORDIRS for Fedora.
+
 * Thu Apr  12 2012 Aleš Kozumplik <akozumpl@redhat.com> - 0.0.0-7.gitaf1465a2%{?dist}
 - Rebase to the upstream.
 - Make repo_add_solv() work without stub repodata.
