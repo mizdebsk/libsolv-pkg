@@ -1,21 +1,19 @@
-%global gitrev 8cf7650
-%{!?ruby_sitearch: %global ruby_sitearch %(ruby -rrbconfig -e 'puts Config::CONFIG["sitearchdir"] ')}
+%global gitrev d39a42b
+%{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts Config::CONFIG["vendorarchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
-%filter_provides_in %{ruby_sitearch}/.*\.so$
+%filter_provides_in %{ruby_vendorarch}/.*\.so$
 %filter_setup
 
 Name:		libsolv
 Version:	0.0.0
-Release:	9.git%{gitrev}%{?dist}
+Release:	11.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
 # git archive %{gitrev} --prefix=libsolv/ | xz > libsolv-%{gitrev}.tar.xz
 Source:		libsolv-%{gitrev}.tar.xz
 Patch0:		libsolv-rubyinclude.patch
-Patch1:		libsolv-newruby.patch
-Patch2:		libsolv-ruby-usevendordirs.patch
 Group:		Development/Libraries
 Summary:	Package dependency solver
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
@@ -33,8 +31,8 @@ library is based on two major, but independent, blocks:
 %package devel
 Summary:	A new approach to package dependency solving
 Group:		Development/Libraries
-Requires:	libsolv-tools%{?_isa} = %{epoch}:%{version}-%{release}
-Requires:	libsolv%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	libsolv-tools%{?_isa} = %{version}-%{release}
+Requires:	libsolv%{?_isa} = %{version}-%{release}
 Requires:	rpm-devel%{?_isa}
 Requires:	cmake
 
@@ -45,7 +43,7 @@ Development files for libsolv,
 Summary:	A new approach to package dependency solving
 Group:		Development/Libraries
 Requires:	gzip bzip2 coreutils
-Requires:	libsolv%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	libsolv%{?_isa} = %{version}-%{release}
 
 %description tools
 Package dependency solver tools.
@@ -84,8 +82,6 @@ Perl bindings for sat solver.
 %prep
 %setup -q -n libsolv
 %patch0 -p1 -b .rubyinclude
-%patch1 -p1 -b .newruby
-%patch2 -p1 -b .ruby-usevendordirs
 
 %build
 %cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -138,13 +134,18 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 
 %files -n ruby-solv
 %doc examples/rbsolv
-%{ruby_sitearch}/*
+%{ruby_vendorarch}/*
 
 %files -n python-solv
 %doc examples/pysolv
 %{python_sitearch}/*
 
 %changelog
+* Thu Jun  7 2012 Aleš Kozumplik <akozumpl@redhat.com> - 0.0.0-11.gitd39a42b%{?dist}
+- Rebase to upstream d39a42b.
+- Fix the epochs.
+- Move the ruby modules into vendorarch dir, where they are expected.
+
 * Thu May  17 2012 Aleš Kozumplik <akozumpl@redhat.com> - 0.0.0-9.git8cf7650%{?dist}
 - Rebase to upstream 8cf7650.
 - ruby bindings: fix USE_VENDORDIRS for Fedora.
