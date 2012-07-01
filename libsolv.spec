@@ -1,4 +1,4 @@
-%global gitrev d39a42b
+%global gitrev 1617994
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts Config::CONFIG["vendorarchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.0.0
-Release:	11.git%{gitrev}%{?dist}
+Release:	12.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -141,6 +141,10 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Sun Jul 1 2012 Aleš Kozumplik <akozumpl@redhat.com> - 0.0.0-12.git1617994%{?dist}
+- Rebase to upstream 1617994.
+- Support for RPM_ADD_WITH_HDRID.
+
 * Thu Jun  7 2012 Aleš Kozumplik <akozumpl@redhat.com> - 0.0.0-11.gitd39a42b%{?dist}
 - Rebase to upstream d39a42b.
 - Fix the epochs.
