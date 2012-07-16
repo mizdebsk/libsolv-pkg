@@ -7,13 +7,14 @@
 
 Name:		libsolv
 Version:	0.0.0
-Release:	12.git%{gitrev}%{?dist}
+Release:	13.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
 # git archive %{gitrev} --prefix=libsolv/ | xz > libsolv-%{gitrev}.tar.xz
 Source:		libsolv-%{gitrev}.tar.xz
 Patch0:		libsolv-rubyinclude.patch
+Patch1:		libsolv-job-reasons.patch
 Group:		Development/Libraries
 Summary:	Package dependency solver
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
@@ -82,6 +83,7 @@ Perl bindings for sat solver.
 %prep
 %setup -q -n libsolv
 %patch0 -p1 -b .rubyinclude
+%patch1 -p1 -b .jobreasons
 
 %build
 %cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -141,6 +143,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Mon Jul 16 2012 Aleš Kozumplik <akozumpl@redhat.com> - 0.0.0-13.git1617994%{?dist}
+- preliminary fix for JOB resons in solver_describe_decision().
+
 * Sun Jul 1 2012 Aleš Kozumplik <akozumpl@redhat.com> - 0.0.0-12.git1617994%{?dist}
 - Rebase to upstream 1617994.
 - Support for RPM_ADD_WITH_HDRID.
