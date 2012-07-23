@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.0.0
-Release:	15.git%{gitrev}%{?dist}
+Release:	16.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -15,6 +15,7 @@ Url:		https://github.com/openSUSE/libsolv
 Source:		libsolv-%{gitrev}.tar.xz
 Patch0:		libsolv-rubyinclude.patch
 Patch1:		libsolv-job-reasons.patch
+Patch2: 	libsolv-solvi-stdbool.patch
 Group:		Development/Libraries
 Summary:	Package dependency solver
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
@@ -84,6 +85,7 @@ Perl bindings for sat solver.
 %setup -q -n libsolv
 %patch0 -p1 -b .rubyinclude
 %patch1 -p1 -b .jobreasons
+%patch2 -p1 -b .solvistdbool
 
 %build
 %cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -143,6 +145,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Mon Jul 23 2012 Aleš Kozumplík <akozumpl@redhat.com> - 0.0.0-16.git1617994
+- Fix build problems with Perl bindings.
+
 * Mon Jul 23 2012 Aleš Kozumplík <akozumpl@redhat.com> - 0.0.0-15.git1617994
 - Rebuilt after a failed mass rebuild.
 
