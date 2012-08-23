@@ -1,4 +1,4 @@
-%global gitrev 1617994
+%global gitrev 6c9d3eb
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts Config::CONFIG["vendorarchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
@@ -7,15 +7,13 @@
 
 Name:		libsolv
 Version:	0.0.0
-Release:	16.git%{gitrev}%{?dist}
+Release:	17.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
 # git archive %{gitrev} --prefix=libsolv/ | xz > libsolv-%{gitrev}.tar.xz
 Source:		libsolv-%{gitrev}.tar.xz
 Patch0:		libsolv-rubyinclude.patch
-Patch1:		libsolv-job-reasons.patch
-Patch2: 	libsolv-solvi-stdbool.patch
 Group:		Development/Libraries
 Summary:	Package dependency solver
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
@@ -84,8 +82,6 @@ Perl bindings for sat solver.
 %prep
 %setup -q -n libsolv
 %patch0 -p1 -b .rubyinclude
-%patch1 -p1 -b .jobreasons
-%patch2 -p1 -b .solvistdbool
 
 %build
 %cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -145,6 +141,11 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Thu Aug 23 2012 Aleš Kozumplík <akozumpl@redhat.com> - 0.0.0-17.git6c9d3eb
+- Rebase to upstream 6c9d3eb.
+- Drop the solv.i stdbool.h fix integrated upstream.
+- Dropped the job reasons fix.
+
 * Mon Jul 23 2012 Aleš Kozumplík <akozumpl@redhat.com> - 0.0.0-16.git1617994
 - Fix build problems with Perl bindings.
 
