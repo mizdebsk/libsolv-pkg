@@ -1,13 +1,13 @@
-%global gitrev 6c9d3eb
-%{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts Config::CONFIG["vendorarchdir"] ')}
+%global gitrev f663ca2
+%{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["vendorarchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
 %filter_provides_in %{ruby_vendorarch}/.*\.so$
 %filter_setup
 
 Name:		libsolv
-Version:	0.0.0
-Release:	17.git%{gitrev}%{?dist}
+Version:	0.2.3
+Release:	1.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
