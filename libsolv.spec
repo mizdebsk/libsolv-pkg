@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.3.0
-Release:	2.git%{gitrev}%{?dist}
+Release:	3.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -83,6 +83,9 @@ Perl bindings for sat solver.
 %setup -q -n libsolv
 %patch0 -p1 -b .rubyinclude
 
+%check
+make ARGS="-V" test
+
 %build
 %cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
        -DENABLE_PERL=1 \
@@ -141,6 +144,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Wed May 16 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-3.git7399ad1
+- Run 'make test' with libsolv build.
+
 * Mon Apr 8 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-2.git7399ad1
 - Rebase to upstream 7399ad1.
 - Fixes RhBug:905209
