@@ -1,4 +1,4 @@
-%global gitrev 7399ad1
+%global gitrev 209e9cb
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["vendorarchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.3.0
-Release:	3.git%{gitrev}%{?dist}
+Release:	4.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -127,6 +127,7 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %_libdir/libsolvext.so
 %_includedir/solv
 %_datadir/cmake/Modules/FindLibSolv.cmake
+%{_mandir}/man?/*
 
 %files demo
 %_bindir/solv
@@ -144,6 +145,10 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Thu Jun 20 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-4.git209e9cb
+- Rebase to upstream 209e9cb.
+- Package the new man pages.
+
 * Wed May 16 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-3.git7399ad1
 - Run 'make test' with libsolv build.
 
