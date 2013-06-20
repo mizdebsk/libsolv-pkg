@@ -149,7 +149,7 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 - Rebase to upstream 209e9cb.
 - Package the new man pages.
 
-* Wed May 16 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-3.git7399ad1
+* Thu May 16 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-3.git7399ad1
 - Run 'make test' with libsolv build.
 
 * Mon Apr 8 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-2.git7399ad1
