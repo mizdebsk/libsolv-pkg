@@ -1,4 +1,4 @@
-%global gitrev 209e9cb
+%global gitrev 228d412
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["vendorarchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.3.0
-Release:	4.git%{gitrev}%{?dist}
+Release:	5.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -145,6 +145,10 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Mon Jun  24 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-5.git228d412
+- Rebase to upstream 228d412.
+- Fixes hawkey github issue https://github.com/akozumpl/hawkey/issues/13
+
 * Thu Jun 20 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-4.git209e9cb
 - Rebase to upstream 209e9cb.
 - Package the new man pages.
