@@ -92,7 +92,11 @@ make ARGS="-V" test
        -DENABLE_PYTHON=1 \
        -DENABLE_RUBY=1 \
        -DUSE_VENDORDIRS=1 \
-       -DFEDORA=1
+       -DFEDORA=1 \
+       -DENABLE_DEBIAN=1 \
+       -DENABLE_ARCHREPO=1 \
+       -DENABLE_LZMA_COMPRESSION=1 \
+       -DMULTI_SEMANTICS=1
 
 make %{?_smp_mflags}
 
@@ -110,6 +114,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %_libdir/libsolvext.so.*
 
 %files tools
+%_bindir/archpkgs2solv
+%_bindir/archrepo2solv
+%_bindir/deb2solv
 %_bindir/deltainfoxml2solv
 %_bindir/dumpsolv
 %_bindir/installcheck
@@ -145,10 +152,14 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+
+* Fri Jul 19 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-6.git228d412
+- Add build flags, including Deb, Arch, LZMA and MULTI_SEMANTICS. (RhBug:985905)
+
 * Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 0.3.0-6.git228d412
 - Perl 5.18 rebuild
 
-* Mon Jun  24 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-5.git228d412
+* Mon Jun 24 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-5.git228d412
 - Rebase to upstream 228d412.
 - Fixes hawkey github issue https://github.com/akozumpl/hawkey/issues/13
 
