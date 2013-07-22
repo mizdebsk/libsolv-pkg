@@ -18,6 +18,7 @@ Group:		Development/Libraries
 Summary:	Package dependency solver
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
 BuildRequires:	swig perl perl-devel ruby ruby-devel python2-devel
+BuildRequires:  xz-devel
 %description
 A free package dependency solver using a satisfiability algorithm. The
 library is based on two major, but independent, blocks:
