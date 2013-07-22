@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.3.0
-Release:	6.git%{gitrev}%{?dist}
+Release:	7.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -153,7 +153,7 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 
 %changelog
 
-* Fri Jul 19 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-6.git228d412
+* Fri Jul 19 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-7.git228d412
 - Add build flags, including Deb, Arch, LZMA and MULTI_SEMANTICS. (RhBug:985905)
 
 * Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 0.3.0-6.git228d412
