@@ -1,4 +1,4 @@
-%global gitrev 228d412
+%global gitrev a59d11d
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["vendorarchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.3.0
-Release:	7.git%{gitrev}%{?dist}
+Release:	8.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -153,6 +153,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+
+* Wed Jul 31 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-8.gita59d11d
+- Rebase to upstream a59d11d.
 
 * Fri Jul 19 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-7.git228d412
 - Add build flags, including Deb, Arch, LZMA and MULTI_SEMANTICS. (RhBug:985905)
