@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.3.0
-Release:	8.git%{gitrev}%{?dist}
+Release:	9.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -153,6 +153,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Sat Aug 03 2013 Petr Pisar <ppisar@redhat.com> - 0.3.0-9.gita59d11d
+- Perl 5.18 rebuild
+
 
 * Wed Jul 31 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.3.0-8.gita59d11d
 - Rebase to upstream a59d11d.
