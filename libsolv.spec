@@ -1,4 +1,4 @@
-%global gitrev d49d319
+%global gitrev 4442b7f
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["vendorarchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.4.0
-Release:	1.git%{gitrev}%{?dist}
+Release:	2.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -153,6 +153,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Fri Nov 22 2013 Zdenek Pavlas <zpavlas@redhat.com> - 0.4.0-2.git4442b7f
+- Rebase to 0.4.0, upstream commit 4442b7f.
+- support DELTA_LOCATION_BASE for completeness
 
 * Mon Oct 29 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.4.0-1.gitd49d319
 - Rebase to 0.4.0, upstream commit d49d319.
