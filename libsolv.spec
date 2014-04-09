@@ -154,7 +154,7 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 
 %changelog
 
-* Wed Apr 9 2014 Jan Silhan <jsilhan@redhat.com> - 0.4.1-0.git05baf54
+* Wed Apr 9 2014 Jan Silhan <jsilhan@redhat.com> - 0.6.0-0.git05baf54
 - Rebase to 0.6.0, upstream commit 05baf54.
 
 * Mon Dec 16 2013 Aleš Kozumplík <akozumpl@redhat.com> - 0.4.1-1.gitbcedc98
