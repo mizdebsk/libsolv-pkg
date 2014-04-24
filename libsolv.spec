@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.6.0
-Release:	0.git%{gitrev}%{?dist}
+Release:	0.git%{gitrev}%{?dist}.1
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -153,6 +153,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Thu Apr 24 2014 Vít Ondruch <vondruch@redhat.com> - 0.6.0-0.git05baf54.1
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_2.1
+
 
 * Wed Apr 9 2014 Jan Silhan <jsilhan@redhat.com> - 0.6.0-0.git05baf54
 - Rebase to 0.6.0, upstream commit 05baf54.
