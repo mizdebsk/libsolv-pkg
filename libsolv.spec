@@ -1,4 +1,4 @@
-%global gitrev 05baf54
+%global gitrev f78f5de
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["vendorarchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
@@ -6,8 +6,8 @@
 %filter_setup
 
 Name:		libsolv
-Version:	0.6.0
-Release:	0.git%{gitrev}%{?dist}.1
+Version:	0.6.1
+Release:	0.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -153,9 +153,12 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+
+* Fri Apr 25 2014 Jan Silhan <jsilhan@redhat.com> - 0.6.1-0.gitf78f5de
+- Rebase to 0.6.0, upstream commit f78f5de.
+
 * Thu Apr 24 2014 Vít Ondruch <vondruch@redhat.com> - 0.6.0-0.git05baf54.1
 - Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_2.1
-
 
 * Wed Apr 9 2014 Jan Silhan <jsilhan@redhat.com> - 0.6.0-0.git05baf54
 - Rebase to 0.6.0, upstream commit 05baf54.
