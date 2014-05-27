@@ -1,4 +1,4 @@
-%global gitrev f78f5de
+%global gitrev 6d968f1
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["vendorarchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.6.1
-Release:	0.git%{gitrev}%{?dist}
+Release:	1.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -153,6 +153,10 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+
+* Tue May 27 2014 Aleš Kozumplík <ales@redhat.com> - 0.6.1-1.git6d968f1
+- Rebase to upstream 6d968f1
+- Fix RhBug:1049209
 
 * Fri Apr 25 2014 Jan Silhan <jsilhan@redhat.com> - 0.6.1-0.gitf78f5de
 - Rebase to 0.6.0, upstream commit f78f5de.
