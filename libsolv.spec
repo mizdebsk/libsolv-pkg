@@ -6,8 +6,8 @@
 %filter_setup
 
 Name:		libsolv
-Version:	0.6.1
-Release:	2.git%{gitrev}%{?dist}
+Version:	0.6.4
+Release:	0.git%{gitrev}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -153,9 +153,12 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Mon Jul 14 2014 Jan Silhan <jsilhan@redhat.com> - 0.6.4-0.git2a5c1c4
+- Rebase to upstream 2a5c1c4
+- Filename selector can start with a star
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.1-2.git6d968f1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
-
 
 * Tue May 27 2014 Aleš Kozumplík <ales@redhat.com> - 0.6.1-1.git6d968f1
 - Rebase to upstream 6d968f1
