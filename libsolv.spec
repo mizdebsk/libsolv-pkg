@@ -1,4 +1,4 @@
-%global gitrev 5bd9589
+%global gitrev 12af31a
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["vendorarchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.6.4
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -153,6 +153,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+
+* Mon Aug 11 2014 Jan Silhan <jsilhan@redhat.com> - 0.6.4-2
+- Rebase to upstream 12af31a
 
 * Mon Jul 28 2014 Aleš Kozumplík <akozumpl@redhat.com> - 0.6.4-1
 - Rebase to upstream 5bd9589
