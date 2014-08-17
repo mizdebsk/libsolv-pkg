@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.6.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -153,6 +153,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
 
 * Mon Aug 11 2014 Jan Silhan <jsilhan@redhat.com> - 0.6.4-2
 - Rebase to upstream 12af31a
