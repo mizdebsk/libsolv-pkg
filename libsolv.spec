@@ -1,4 +1,3 @@
-%global gitrev 12af31a
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["vendorarchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
@@ -6,13 +5,11 @@
 %filter_setup
 
 Name:		libsolv
-Version:	0.6.4
-Release:	3%{?dist}
+Version:	0.6.8
+Release:	1%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
-# git clone https://github.com/openSUSE/libsolv.git
-# git archive %{gitrev} --prefix=libsolv/ | xz > libsolv-%{gitrev}.tar.xz
-Source:		libsolv-%{gitrev}.tar.xz
+Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz
 Patch0:		libsolv-rubyinclude.patch
 Group:		Development/Libraries
 Summary:	Package dependency solver
@@ -81,7 +78,7 @@ Requires:	perl
 Perl bindings for sat solver.
 
 %prep
-%setup -q -n libsolv
+%setup -q -n libsolv-%{version}
 %patch0 -p1 -b .rubyinclude
 
 %check
@@ -153,6 +150,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Fri Jan 16 2015 Richard Hughes <richard@hughsie.com> - 0.6.8-2
+- Update to latest upstream release to fix a crash in PackageKit.
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
