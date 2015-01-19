@@ -1,0 +1,20 @@
+--- a/cmake/modules/FindRuby.cmake
++++ b/cmake/modules/FindRuby.cmake
+@@ -86,7 +86,7 @@
+       OUTPUT_VARIABLE _RUBY_OUTPUT
+       ERROR_QUIET)
+     IF(_RUBY_SUCCESS OR NOT _RUBY_OUTPUT)
+-      EXECUTE_PROCESS(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "print Config::CONFIG['${RBVAR}']"
++      EXECUTE_PROCESS(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "print RbConfig::CONFIG['${RBVAR}']"
+         RESULT_VARIABLE _RUBY_SUCCESS
+         OUTPUT_VARIABLE _RUBY_OUTPUT
+         ERROR_QUIET)
+@@ -112,7 +112,7 @@
+    _RUBY_CONFIG_VAR("sitelibdir" RUBY_SITELIB_DIR)
+ 
+    # vendor_ruby available ?
+-   EXECUTE_PROCESS(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "print 'true' unless Config::CONFIG['vendorarchdir'].nil?"
++   EXECUTE_PROCESS(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "print 'true' unless RbConfig::CONFIG['vendorarchdir'].nil?"
+       OUTPUT_VARIABLE RUBY_HAS_VENDOR_RUBY  ERROR_QUIET)
+ 
+    IF(RUBY_HAS_VENDOR_RUBY)

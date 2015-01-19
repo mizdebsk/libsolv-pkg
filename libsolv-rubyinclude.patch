@@ -5,7 +5,7 @@ diff -up libsolv/bindings/ruby/CMakeLists.txt.rubyinclude libsolv/bindings/ruby/
      SET (RUBY_INSTALL_DIR ${RUBY_SITEARCH_DIR})
  ENDIF (USE_VENDORDIRS AND RUBY_VENDORARCH_DIR)
  
-+EXECUTE_PROCESS(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "print Config::CONFIG['arch']"
++EXECUTE_PROCESS(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "print RbConfig::CONFIG['arch']"
 +   OUTPUT_VARIABLE RUBY_ARCH)
 +
 +EXECUTE_PROCESS(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "print RbConfig::CONFIG['rubyhdrdir']"

@@ -6,11 +6,12 @@
 
 Name:		libsolv
 Version:	0.6.8
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz
 Patch0:		libsolv-rubyinclude.patch
+Patch1:		libsolv-ruby22-rbconfig.patch
 Group:		Development/Libraries
 Summary:	Package dependency solver
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
@@ -80,6 +81,7 @@ Perl bindings for sat solver.
 %prep
 %setup -q -n libsolv-%{version}
 %patch0 -p1 -b .rubyinclude
+%patch1 -p1 -b .ruby-rbconfig
 
 %check
 make ARGS="-V" test
@@ -150,6 +152,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Mon Jan 19 2015 Vít Ondruch <vondruch@redhat.com> - 0.6.8-2
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_2.2
+
 * Fri Jan 16 2015 Richard Hughes <richard@hughsie.com> - 0.6.8-2
 - Update to latest upstream release to fix a crash in PackageKit.
 
