@@ -6,7 +6,7 @@
 
 Name:		libsolv
 Version:	0.6.8
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz
@@ -152,6 +152,10 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+
+* Tue Feb 24 2015 Jan Silhan <jsilhan@redhat.com> - 0.6.8-3
+- Rebuilt with new provides selection feature
+
 * Mon Jan 19 2015 Vít Ondruch <vondruch@redhat.com> - 0.6.8-2
 - Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_2.2
 
