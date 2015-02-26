@@ -1,7 +1,7 @@
-%global gitrev 78c8a55
+%global gitrev 78c8a55bc087f45e231276ed5c33c84aed55463c
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["vendorarchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
-%filter_provides_in %{python3_sitearch}/.*\.so$
+%filter_provides_in %{python_sitearch}/.*\.so$
 %filter_provides_in %{ruby_vendorarch}/.*\.so$
 %filter_setup
 
@@ -10,9 +10,7 @@ Version:	0.6.8
 Release:	3%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
-# git clone https://github.com/openSUSE/libsolv.git
-# git archive %{gitrev} --prefix=libsolv/ | xz > libsolv-%{gitrev}.tar.xz
-Source:		libsolv-%{gitrev}.tar.xz
+Source:		https://github.com/openSUSE/libsolv/archive/%{gitrev}.tar.gz
 Patch0:		libsolv-rubyinclude.patch
 Patch1:		libsolv-ruby22-rbconfig.patch
 Group:		Development/Libraries
@@ -65,12 +63,12 @@ Group:		Development/Languages
 %description -n ruby-solv
 Ruby bindings for sat solver.
 
-%package -n python3-solv
+%package -n python-solv
 Summary:	Python bindings for the libsolv library
 Group:		Development/Languages
 Requires:	python
 
-%description -n python3-solv
+%description -n python-solv
 Python bindings for sat solver.
 
 %package -n perl-solv
@@ -82,7 +80,7 @@ Requires:	perl
 Perl bindings for sat solver.
 
 %prep
-%setup -q -n libsolv
+%setup -q -n libsolv-%{gitrev}
 %patch0 -p1 -b .rubyinclude
 %patch1 -p1 -b .ruby-rbconfig
 
@@ -150,9 +148,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %doc examples/rbsolv
 %{ruby_vendorarch}/*
 
-%files -n python3-solv
+%files -n python-solv
 %doc examples/pysolv
-%{python3_sitearch}/*
+%{python_sitearch}/*
 
 %changelog
 
