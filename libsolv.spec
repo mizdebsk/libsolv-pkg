@@ -1,4 +1,4 @@
-%global gitrev 78c8a55bc087f45e231276ed5c33c84aed55463c
+%global gitrev 850794025c60bf3efe8bd9e402a19cfe83b2fd7b
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["vendorarchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
@@ -6,8 +6,8 @@
 %filter_setup
 
 Name:		libsolv
-Version:	0.6.8
-Release:	3%{?dist}
+Version:	0.6.10
+Release:	1%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{gitrev}.tar.gz
@@ -153,6 +153,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Wed Mar 25 2015 Jan Silhan <jsilhan@redhat.com> - 0.6.10-1
+- new version fixing segfault
+
 * Fri Mar 6 2015 Jan Silhan <jsilhan@redhat.com> - 0.6.8-3
 - Rebuilt with new provides selection feature
 
