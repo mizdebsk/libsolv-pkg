@@ -1,4 +1,4 @@
-%global gitrev 850794025c60bf3efe8bd9e402a19cfe83b2fd7b
+%global gitrev 99edb54e18f4971f50a359803633f44fdeb08428
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["vendorarchdir"] ')}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
