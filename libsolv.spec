@@ -1,18 +1,17 @@
-%global gitrev 99edb54e18f4971f50a359803633f44fdeb08428
-%{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["vendorarchdir"] ')}
+%global gitrev 2db517f87a8c0364d28c0fa2590ba034e866a4b8
+%{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -r rbconfig -e "puts RbConfig::CONFIG['vendorarchdir'].nil? ? RbConfig::CONFIG['sitearchdir'] : RbConfig::CONFIG['vendorarchdir']")}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python_sitearch}/.*\.so$
 %filter_provides_in %{ruby_vendorarch}/.*\.so$
 %filter_setup
 
 Name:		libsolv
-Version:	0.6.10
-Release:	2%{?dist}
+Version:	0.6.11
+Release:	1%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{gitrev}.tar.gz
 Patch0:		libsolv-rubyinclude.patch
-Patch1:		libsolv-ruby22-rbconfig.patch
 Group:		Development/Libraries
 Summary:	Package dependency solver
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
@@ -82,7 +81,6 @@ Perl bindings for sat solver.
 %prep
 %setup -q -n libsolv-%{gitrev}
 %patch0 -p1 -b .rubyinclude
-%patch1 -p1 -b .ruby-rbconfig
 
 %check
 make ARGS="-V" test
@@ -153,6 +151,10 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Mon Jun 22 2015 Jan Silhan <jsilhan@redhat.com> - 0.6.11-1
+- new version fixing segfault
+- RbConfig fixed in the upstream (1928f1a), libsolv-ruby22-rbconfig.patch erased
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.10-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
