@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.6.11
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{gitrev}.tar.gz
@@ -58,6 +58,7 @@ Applications demoing the libsolv library.
 %package -n ruby-solv
 Summary:	Ruby bindings for the libsolv library
 Group:		Development/Languages
+Requires:	libsolv%{?_isa} = %{version}-%{release}
 
 %description -n ruby-solv
 Ruby bindings for sat solver.
@@ -66,6 +67,7 @@ Ruby bindings for sat solver.
 Summary:	Python bindings for the libsolv library
 Group:		Development/Languages
 Requires:	python
+Requires:	libsolv%{?_isa} = %{version}-%{release}
 
 %description -n python-solv
 Python bindings for sat solver.
@@ -74,6 +76,7 @@ Python bindings for sat solver.
 Summary:	Perl bindings for the libsolv library
 Group:		Development/Languages
 Requires:	perl
+Requires:	libsolv%{?_isa} = %{version}-%{release}
 
 %description -n perl-solv
 Perl bindings for sat solver.
@@ -151,6 +154,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Tue Aug 04 2015 Adam Williamson <awilliam@redhat.com> - 0.6.11-2
+- make bindings require the exact matching version of the lib (#1243737)
+
 * Mon Jun 22 2015 Jan Silhan <jsilhan@redhat.com> - 0.6.11-1
 - new version fixing segfault
 - RbConfig fixed in the upstream (1928f1a), libsolv-ruby22-rbconfig.patch erased
