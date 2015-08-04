@@ -1,21 +1,51 @@
-%global gitrev 2db517f87a8c0364d28c0fa2590ba034e866a4b8
+%global gitrev 1f9abfb5b1bb18a8f46887fa2541957e74132567
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -r rbconfig -e "puts RbConfig::CONFIG['vendorarchdir'].nil? ? RbConfig::CONFIG['sitearchdir'] : RbConfig::CONFIG['vendorarchdir']")}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
-%filter_provides_in %{python_sitearch}/.*\.so$
+%filter_provides_in %{python2_sitearch}/.*\.so$
+%if %{?fedora}
+%bcond_without python3
+%filter_provides_in %{python3_sitearch}/.*\.so$
+%global _cmake_opts \\\
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \\\
+            -DENABLE_PERL=1 \\\
+            -DENABLE_PYTHON=1 \\\
+            -DENABLE_RUBY=1 \\\
+            -DUSE_VENDORDIRS=1 \\\
+            -DFEDORA=1 \\\
+            -DENABLE_DEBIAN=1 \\\
+            -DENABLE_ARCHREPO=1 \\\
+            -DENABLE_LZMA_COMPRESSION=1 \\\
+            -DMULTI_SEMANTICS=1 \\\
+            -DENABLE_COMPLEX_DEPS=1 \\\
+            %{nil}
+%else
+%bcond_with python3
+%global _cmake_opts \\\
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \\\
+            -DFEDORA=1 \\\
+            -DENABLE_LZMA_COMPRESSION=1 \\\
+            %{nil}
+%endif
 %filter_provides_in %{ruby_vendorarch}/.*\.so$
 %filter_setup
 
 Name:		libsolv
 Version:	0.6.11
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{gitrev}.tar.gz
 Patch0:		libsolv-rubyinclude.patch
+# https://github.com/openSUSE/libsolv/commit/204406df09b45e1316f02f1f629ef79574530b3d
+Patch1:		0001-Specify-PYTHONLIBS_VERSION_STRING-on-the-FIND_PACKAG.patch
 Group:		Development/Libraries
 Summary:	Package dependency solver
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
-BuildRequires:	swig perl perl-devel ruby ruby-devel python2-devel
+BuildRequires:	swig perl perl-devel ruby ruby-devel
+BuildRequires:	python2-devel
+%if %{with python3}
+BuildRequires:	python3-devel
+%endif
 BuildRequires:  xz-devel
 %description
 A free package dependency solver using a satisfiability algorithm. The
@@ -63,14 +93,27 @@ Requires:	libsolv%{?_isa} = %{version}-%{release}
 %description -n ruby-solv
 Ruby bindings for sat solver.
 
-%package -n python-solv
+%package -n python2-solv
 Summary:	Python bindings for the libsolv library
 Group:		Development/Languages
-Requires:	python
+Requires:	python2
 Requires:	libsolv%{?_isa} = %{version}-%{release}
+%{?python_provide:%python_provide python2-solv}
 
-%description -n python-solv
+%description -n python2-solv
 Python bindings for sat solver.
+
+%if %{with python3}
+%package -n python3-solv
+Summary:	Python 3 bindings for the libsolv library
+Group:		Development/Languages
+Requires:	python3
+Requires:	libsolv%{?_isa} = %{version}-%{release}
+%{?python_provide:%python_provide python3-solv}
+
+%description -n python3-solv
+Python 3 bindings for sat solver.
+%endif
 
 %package -n perl-solv
 Summary:	Perl bindings for the libsolv library
@@ -84,27 +127,37 @@ Perl bindings for sat solver.
 %prep
 %setup -q -n libsolv-%{gitrev}
 %patch0 -p1 -b .rubyinclude
+%patch1 -p1 -b .python3
+
+%if %{with python3}
+rm -rf %{py3dir}
+cp -a . %{py3dir}
+%endif
+
+%build
+%cmake %_cmake_opts \
+        -DPythonLibs_FIND_VERSION=2 -DPythonLibs_FIND_VERSION_MAJOR=2
+%make_build
+
+%if %{with python3}
+pushd %{py3dir}/
+  %cmake %_cmake_opts \
+        -DPythonLibs_FIND_VERSION=3 -DPythonLibs_FIND_VERSION_MAJOR=3
+  %make_build
+popd
+%endif
+
+%install
+%make_install
+
+%if %{with python3}
+pushd %{py3dir}/
+  %make_install
+popd
+%endif
 
 %check
 make ARGS="-V" test
-
-%build
-%cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-       -DENABLE_PERL=1 \
-       -DENABLE_PYTHON=1 \
-       -DENABLE_RUBY=1 \
-       -DUSE_VENDORDIRS=1 \
-       -DFEDORA=1 \
-       -DENABLE_DEBIAN=1 \
-       -DENABLE_ARCHREPO=1 \
-       -DENABLE_LZMA_COMPRESSION=1 \
-       -DMULTI_SEMANTICS=1
-
-make %{?_smp_mflags}
-
-%install
-make DESTDIR=$RPM_BUILD_ROOT install
-rm $RPM_BUILD_ROOT/usr/bin/testsolv
 
 %post -p /sbin/ldconfig
 
@@ -128,6 +181,7 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %_bindir/rpmdb2solv
 %_bindir/rpmmd2solv
 %_bindir/rpms2solv
+%_bindir/testsolv
 %_bindir/updateinfoxml2solv
 
 %files devel
@@ -149,11 +203,23 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %doc examples/rbsolv
 %{ruby_vendorarch}/*
 
-%files -n python-solv
+%files -n python2-solv
 %doc examples/pysolv
-%{python_sitearch}/*
+%{python2_sitearch}/*
+
+%if %{with python3}
+%files -n python3-solv
+%doc examples/pysolv
+%{python3_sitearch}/*
+%endif
 
 %changelog
+* Wed Aug 05 2015 Jan Silhan <jsilhan@redhat.com> - 0.6.11-3
+- added compile flag to support rich dependencies
+- new version adding MIPS support
+- Distribute testsolv in -tools subpackage (Igor Gnatenko)
+- Enable python3 bindings for fedora (Igor Gnatenko)
+
 * Tue Aug 04 2015 Adam Williamson <awilliam@redhat.com> - 0.6.11-2
 - make bindings require the exact matching version of the lib (#1243737)
 
