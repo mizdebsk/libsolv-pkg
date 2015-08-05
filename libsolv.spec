@@ -41,8 +41,10 @@ Patch1:		0001-Specify-PYTHONLIBS_VERSION_STRING-on-the-FIND_PACKAG.patch
 Group:		Development/Libraries
 Summary:	Package dependency solver
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
-BuildRequires:	swig perl perl-devel ruby ruby-devel
-BuildRequires:	python2-devel
+BuildRequires:	swig 
+%if 0%{?fedora}
+BuildRequires:	perl perl-devel ruby ruby-devel python2-devel
+%endif
 %if %{with python3}
 BuildRequires:	python3-devel
 %endif
@@ -85,6 +87,7 @@ Requires:	curl gnupg2
 %description demo
 Applications demoing the libsolv library.
 
+%if 0%{?fedora}
 %package -n ruby-solv
 Summary:	Ruby bindings for the libsolv library
 Group:		Development/Languages
@@ -92,7 +95,9 @@ Requires:	libsolv%{?_isa} = %{version}-%{release}
 
 %description -n ruby-solv
 Ruby bindings for sat solver.
+%endif
 
+%if 0%{?fedora}
 %package -n python2-solv
 Summary:	Python bindings for the libsolv library
 Group:		Development/Languages
@@ -102,6 +107,7 @@ Requires:	libsolv%{?_isa} = %{version}-%{release}
 
 %description -n python2-solv
 Python bindings for sat solver.
+%endif
 
 %if %{with python3}
 %package -n python3-solv
@@ -115,6 +121,7 @@ Requires:	libsolv%{?_isa} = %{version}-%{release}
 Python 3 bindings for sat solver.
 %endif
 
+%if 0%{?fedora}
 %package -n perl-solv
 Summary:	Perl bindings for the libsolv library
 Group:		Development/Languages
@@ -123,6 +130,7 @@ Requires:	libsolv%{?_isa} = %{version}-%{release}
 
 %description -n perl-solv
 Perl bindings for sat solver.
+%endif
 
 %prep
 %setup -q -n libsolv-%{gitrev}
@@ -169,9 +177,11 @@ make ARGS="-V" test
 %_libdir/libsolvext.so.*
 
 %files tools
+%if 0%{?fedora}
 %_bindir/archpkgs2solv
 %_bindir/archrepo2solv
 %_bindir/deb2solv
+%endif
 %_bindir/deltainfoxml2solv
 %_bindir/dumpsolv
 %_bindir/installcheck
@@ -195,6 +205,7 @@ make ARGS="-V" test
 %files demo
 %_bindir/solv
 
+%if 0%{?fedora}
 %files -n perl-solv
 %doc examples/p5solv
 %{perl_vendorarch}/*
@@ -206,6 +217,7 @@ make ARGS="-V" test
 %files -n python2-solv
 %doc examples/pysolv
 %{python2_sitearch}/*
+%endif
 
 %if %{with python3}
 %files -n python3-solv
