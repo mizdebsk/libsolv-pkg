@@ -2,7 +2,7 @@
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -r rbconfig -e "puts RbConfig::CONFIG['vendorarchdir'].nil? ? RbConfig::CONFIG['sitearchdir'] : RbConfig::CONFIG['vendorarchdir']")}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python2_sitearch}/.*\.so$
-%if %{?fedora}
+%if 0%{?fedora}
 %bcond_without python3
 %filter_provides_in %{python3_sitearch}/.*\.so$
 %global _cmake_opts \\\
