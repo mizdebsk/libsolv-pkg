@@ -1,4 +1,5 @@
 %global gitrev 1f9abfb5b1bb18a8f46887fa2541957e74132567
+%global shortcommit %(c=%{gitrev}; echo ${c:0:7})
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -r rbconfig -e "puts RbConfig::CONFIG['vendorarchdir'].nil? ? RbConfig::CONFIG['sitearchdir'] : RbConfig::CONFIG['vendorarchdir']")}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python2_sitearch}/.*\.so$
@@ -31,13 +32,11 @@
 
 Name:		libsolv
 Version:	0.6.11
-Release:	3%{?dist}
+Release:	3.git%{shortcommit}%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
-Source:		https://github.com/openSUSE/libsolv/archive/%{gitrev}.tar.gz
+Source:		https://github.com/openSUSE/libsolv/archive/%{gitrev}.tar.gz#/%{name}-%{shortcommit}.tar.gz
 Patch0:		libsolv-rubyinclude.patch
-# https://github.com/openSUSE/libsolv/commit/204406df09b45e1316f02f1f629ef79574530b3d
-Patch1:		0001-Specify-PYTHONLIBS_VERSION_STRING-on-the-FIND_PACKAG.patch
 Group:		Development/Libraries
 Summary:	Package dependency solver
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
@@ -135,7 +134,6 @@ Perl bindings for sat solver.
 %prep
 %setup -q -n libsolv-%{gitrev}
 %patch0 -p1 -b .rubyinclude
-%patch1 -p1 -b .python3
 
 %if %{with python3}
 rm -rf %{py3dir}
