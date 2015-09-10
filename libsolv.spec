@@ -1,5 +1,3 @@
-%global gitrev 1f9abfb5b1bb18a8f46887fa2541957e74132567
-%global shortcommit %(c=%{gitrev}; echo ${c:0:7})
 %{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -r rbconfig -e "puts RbConfig::CONFIG['vendorarchdir'].nil? ? RbConfig::CONFIG['sitearchdir'] : RbConfig::CONFIG['vendorarchdir']")}
 %filter_provides_in %{perl_vendorarch}/.*\.so$
 %filter_provides_in %{python2_sitearch}/.*\.so$
@@ -31,11 +29,11 @@
 %filter_setup
 
 Name:		libsolv
-Version:	0.6.11
-Release:	3.git%{shortcommit}%{?dist}
+Version:	0.6.12
+Release:	1%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
-Source:		https://github.com/openSUSE/libsolv/archive/%{gitrev}.tar.gz#/%{name}-%{shortcommit}.tar.gz
+Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Patch0:		libsolv-rubyinclude.patch
 Group:		Development/Libraries
 Summary:	Package dependency solver
@@ -132,7 +130,7 @@ Perl bindings for sat solver.
 %endif
 
 %prep
-%setup -q -n libsolv-%{gitrev}
+%setup -q
 %patch0 -p1 -b .rubyinclude
 
 %if %{with python3}
@@ -224,6 +222,9 @@ make ARGS="-V" test
 %endif
 
 %changelog
+* Thu Sep 10 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.6.12-1
+- Update to 0.6.12
+
 * Wed Aug 05 2015 Jan Silhan <jsilhan@redhat.com> - 0.6.11-3
 - added compile flag to support rich dependencies
 - new version adding MIPS support
