@@ -197,6 +197,7 @@ make ARGS="-V" test
 %_includedir/solv
 %_datadir/cmake/Modules/FindLibSolv.cmake
 %{_mandir}/man?/*
+%{_libdir}/pkgconfig/%{name}.pc
 
 %files demo
 %_bindir/solv
