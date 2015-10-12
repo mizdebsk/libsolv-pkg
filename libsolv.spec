@@ -29,12 +29,19 @@
 %filter_setup
 
 Name:		libsolv
-Version:	0.6.12
+Version:	0.6.14
 Release:	1%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
-Patch0:		libsolv-rubyinclude.patch
+Patch0:		0001-ruby-make-compatible-with-ruby-2.2.patch
+
+Patch1:         0001-Move-allowuninstall-map-creation.patch
+Patch2:         0002-Prefer-to-autouninstall-orphans.patch
+Patch3:         0003-Check-keep_orphans-flag-in-solver_addduprules.patch
+Patch4:         0004-Fix-spelling-duh.patch
+BuildRequires:  git-core
+
 Group:		Development/Libraries
 Summary:	Package dependency solver
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
@@ -130,8 +137,7 @@ Perl bindings for sat solver.
 %endif
 
 %prep
-%setup -q
-%patch0 -p1 -b .rubyinclude
+%autosetup -S git
 
 %if %{with python3}
 rm -rf %{py3dir}
@@ -223,6 +229,10 @@ make ARGS="-V" test
 %endif
 
 %changelog
+* Mon Oct 12 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.6.14-1
+- Update to 0.6.14
+- Backport patches from upstream
+
 * Thu Sep 10 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.6.12-1
 - Update to 0.6.12
 
