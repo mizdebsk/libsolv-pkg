@@ -30,7 +30,7 @@
 
 Name:		libsolv
 Version:	0.6.14
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -40,6 +40,13 @@ Patch1:         0001-Move-allowuninstall-map-creation.patch
 Patch2:         0002-Prefer-to-autouninstall-orphans.patch
 Patch3:         0003-Check-keep_orphans-flag-in-solver_addduprules.patch
 Patch4:         0004-Fix-spelling-duh.patch
+Patch5:         0001-Simplify-solver_addduprules-a-bit.patch
+Patch6:         0002-Drop-inline-from-solver_addtodupmaps.patch
+Patch7:         0003-Rename-hasdupjobs-to-needduprules.patch
+Patch8:         0004-Fix-typo-in-comment.patch
+Patch9:         0005-Speed-up-choice-rule-generation.patch
+Patch10:        0006-Make-keep_orphans-also-keep-multiversion-orphans-ins.patch
+
 BuildRequires:  git-core
 
 Group:		Development/Libraries
@@ -229,6 +236,9 @@ make ARGS="-V" test
 %endif
 
 %changelog
+* Wed Oct 14 2015 Michal Luscon <mluscon@redhat.com> - 0.6.14-2
+- Backport patches from upstream
+
 * Mon Oct 12 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.6.14-1
 - Update to 0.6.14
 - Backport patches from upstream
