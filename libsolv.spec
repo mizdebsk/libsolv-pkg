@@ -30,7 +30,7 @@
 
 Name:		libsolv
 Version:	0.6.14
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -236,6 +236,9 @@ make ARGS="-V" test
 %endif
 
 %changelog
+* Tue Nov 10 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.14-3
+- Rebuilt for https://fedoraproject.org/wiki/Changes/python3.5
+
 * Wed Oct 14 2015 Michal Luscon <mluscon@redhat.com> - 0.6.14-2
 - Backport patches from upstream
 
