@@ -30,7 +30,7 @@
 
 Name:		libsolv
 Version:	0.6.14
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -114,7 +114,11 @@ Summary:	Python bindings for the libsolv library
 Group:		Development/Languages
 Requires:	python2
 Requires:	libsolv%{?_isa} = %{version}-%{release}
-Obsoletes:	python-solv < 0.6.11-3
+# Stupidly, after F23+ switched to 'python2-solv', the packagers kept
+# building newer releases for F22 with 'python-solv', so we can't just
+# do "Obsoletes: python-solv < 0.6.11-3" - we have to do something like
+# this. *WILL NEED ADJUSTING IF AN EPOCH IS ADDED TO <F23 BUILD*
+Obsoletes:	python-solv < %{version}-%{release}
 %{?python_provide:%python_provide python2-solv}
 
 %description -n python2-solv
@@ -237,6 +241,9 @@ make ARGS="-V" test
 %endif
 
 %changelog
+* Wed Nov 18 2015 Adam Williamson <awilliam@redhat.com> - 0.6.14-5
+- adjust obsolete for stupid packaging
+
 * Wed Nov 18 2015 Adam Williamson <awilliam@redhat.com> - 0.6.14-4
 - python2-solv obsoletes python-solv (#1263230)
 
