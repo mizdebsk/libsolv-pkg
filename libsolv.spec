@@ -30,7 +30,7 @@
 
 Name:		libsolv
 Version:	0.6.14
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -114,6 +114,7 @@ Summary:	Python bindings for the libsolv library
 Group:		Development/Languages
 Requires:	python2
 Requires:	libsolv%{?_isa} = %{version}-%{release}
+Obsoletes:	python-solv < 0.6.11-3
 %{?python_provide:%python_provide python2-solv}
 
 %description -n python2-solv
@@ -236,6 +237,9 @@ make ARGS="-V" test
 %endif
 
 %changelog
+* Wed Nov 18 2015 Adam Williamson <awilliam@redhat.com> - 0.6.14-4
+- python2-solv obsoletes python-solv (#1263230)
+
 * Tue Nov 10 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.14-3
 - Rebuilt for https://fedoraproject.org/wiki/Changes/python3.5
 
