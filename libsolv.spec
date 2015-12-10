@@ -30,7 +30,7 @@
 
 Name:		libsolv
 Version:	0.6.14
-Release:	6%{?dist}
+Release:	7%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -59,7 +59,7 @@ BuildRequires:	perl perl-devel ruby ruby-devel python2-devel
 %if %{with python3}
 BuildRequires:	python3-devel
 %endif
-BuildRequires:  xz-devel
+BuildRequires:  xz-devel bzip2-devel
 %description
 A free package dependency solver using a satisfiability algorithm. The
 library is based on two major, but independent, blocks:
@@ -153,7 +153,8 @@ cp -a . %{py3dir}
 
 %build
 %cmake %_cmake_opts \
-        -DPythonLibs_FIND_VERSION=2 -DPythonLibs_FIND_VERSION_MAJOR=2
+        -DPythonLibs_FIND_VERSION=2 -DPythonLibs_FIND_VERSION_MAJOR=2 \
+        -DENABLE_BZIP2_COMPRESSION=1
 make %{?_smp_mflags}
 
 %if %{with python3}
@@ -236,6 +237,10 @@ make ARGS="-V" test
 %endif
 
 %changelog
+* Tue Dec 08 2015 Jaroslav Mracek <jmracek@redhat.com> - 0.6.14-1
+- Rebase to upstream b1ea392
+- Enable bz2 compression support (Mikolaj Izdebski <mizdebsk@redhat.com>) (RhBug:1226647)
+
 * Thu Nov 26 2015 Adam Williamson <awilliam@redhat.com> - 0.6.14-6
 - revert obsolete, as %python_provide does it (undocumented)
 
