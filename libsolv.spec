@@ -29,25 +29,12 @@
 %filter_setup
 
 Name:		libsolv
-Version:	0.6.14
-Release:	7%{?dist}
+Version:	0.6.15
+Release:	1%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Patch0:		0001-ruby-make-compatible-with-ruby-2.2.patch
-
-Patch1:         0001-Move-allowuninstall-map-creation.patch
-Patch2:         0002-Prefer-to-autouninstall-orphans.patch
-Patch3:         0003-Check-keep_orphans-flag-in-solver_addduprules.patch
-Patch4:         0004-Fix-spelling-duh.patch
-Patch5:         0001-Simplify-solver_addduprules-a-bit.patch
-Patch6:         0002-Drop-inline-from-solver_addtodupmaps.patch
-Patch7:         0003-Rename-hasdupjobs-to-needduprules.patch
-Patch8:         0004-Fix-typo-in-comment.patch
-Patch9:         0005-Speed-up-choice-rule-generation.patch
-Patch10:        0006-Make-keep_orphans-also-keep-multiversion-orphans-ins.patch
-
-BuildRequires:  git-core
 
 Group:		Development/Libraries
 Summary:	Package dependency solver
@@ -144,7 +131,7 @@ Perl bindings for sat solver.
 %endif
 
 %prep
-%autosetup -S git
+%autosetup -p1
 
 %if %{with python3}
 rm -rf %{py3dir}
@@ -237,6 +224,9 @@ make ARGS="-V" test
 %endif
 
 %changelog
+* Thu Dec 17 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.6.15-1
+- Update to 0.6.15
+
 * Tue Dec 08 2015 Jaroslav Mracek <jmracek@redhat.com> - 0.6.14-1
 - Rebase to upstream b1ea392
 - Enable bz2 compression support (Mikolaj Izdebski <mizdebsk@redhat.com>) (RhBug:1226647)
