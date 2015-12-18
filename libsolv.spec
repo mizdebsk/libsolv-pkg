@@ -30,16 +30,17 @@
 
 Name:		libsolv
 Version:	0.6.15
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Patch0:		0001-ruby-make-compatible-with-ruby-2.2.patch
+Patch1:		0002-Revert-Rework-multiversion-orphaned-handling.patch
 
 Group:		Development/Libraries
 Summary:	Package dependency solver
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
-BuildRequires:	swig 
+BuildRequires:	swig
 %if 0%{?fedora}
 BuildRequires:	perl perl-devel ruby ruby-devel python2-devel
 %endif
@@ -224,6 +225,9 @@ make ARGS="-V" test
 %endif
 
 %changelog
+* Fri Dec 18 2015 Michal Luscon <mluscon@redhat.com> - 0.6.15-2
+- Revert reworked multiversion orphaned handling
+
 * Thu Dec 17 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.6.15-1
 - Update to 0.6.15
 
