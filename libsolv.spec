@@ -30,7 +30,7 @@
 
 Name:		libsolv
 Version:	0.6.15
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -148,7 +148,8 @@ make %{?_smp_mflags}
 %if %{with python3}
 pushd %{py3dir}/
   %cmake %_cmake_opts \
-        -DPythonLibs_FIND_VERSION=3 -DPythonLibs_FIND_VERSION_MAJOR=3
+        -DPythonLibs_FIND_VERSION=3 -DPythonLibs_FIND_VERSION_MAJOR=3 \
+        -DENABLE_BZIP2_COMPRESSION=1
   make %{?_smp_mflags}
 popd
 %endif
@@ -225,13 +226,16 @@ make ARGS="-V" test
 %endif
 
 %changelog
+* Tue Jan 05 2016 Jaroslav Mracek <jmracek@redhat.com> - 0.6.15-3
+- Fix bz2 compression support for python3 (RhBug:1293652)
+
 * Fri Dec 18 2015 Michal Luscon <mluscon@redhat.com> - 0.6.15-2
 - Revert reworked multiversion orphaned handling
 
 * Thu Dec 17 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.6.15-1
 - Update to 0.6.15
 
-* Tue Dec 08 2015 Jaroslav Mracek <jmracek@redhat.com> - 0.6.14-1
+* Tue Dec 08 2015 Jaroslav Mracek <jmracek@redhat.com> - 0.6.14-7
 - Rebase to upstream b1ea392
 - Enable bz2 compression support (Mikolaj Izdebski <mizdebsk@redhat.com>) (RhBug:1226647)
 
