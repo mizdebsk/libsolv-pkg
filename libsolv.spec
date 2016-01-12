@@ -30,7 +30,7 @@
 
 Name:		libsolv
 Version:	0.6.15
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -226,6 +226,9 @@ make ARGS="-V" test
 %endif
 
 %changelog
+* Tue Jan 12 2016 Vít Ondruch <vondruch@redhat.com> - 0.6.15-5
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_2.3
+
 * Sun Jan 10 2016 Dan Horák <dan[at]danny.cz> - 0.6.15-4
 - fix build on non-Fedora with python3
 
