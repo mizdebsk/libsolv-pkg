@@ -30,7 +30,7 @@
 
 Name:		libsolv
 Version:	0.6.15
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -42,7 +42,7 @@ Summary:	Package dependency solver
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
 BuildRequires:	swig
 %if 0%{?fedora}
-BuildRequires:	perl perl-devel ruby ruby-devel python2-devel
+BuildRequires:	perl perl-devel ruby rubypick rubygems ruby-devel python2-devel
 %endif
 %if %{with python3}
 BuildRequires:	python3-devel
@@ -226,6 +226,9 @@ make ARGS="-V" test
 %endif
 
 %changelog
+* Tue Feb  2 2016 Peter Robinson <pbrobinson@fedoraproject.org> 0.6.15-6
+- Explicitly add rubypick and ruubygems build dependencies
+
 * Tue Jan 12 2016 Vít Ondruch <vondruch@redhat.com> - 0.6.15-5
 - Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_2.3
 
