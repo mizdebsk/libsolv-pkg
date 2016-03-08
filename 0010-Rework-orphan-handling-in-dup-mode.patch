@@ -1,0 +1,311 @@
+From 6c9cef4ef810cd32ffeee20986a16e0871fc0bae Mon Sep 17 00:00:00 2001
+From: Michael Schroeder <mls@suse.de>
+Date: Mon, 7 Mar 2016 14:09:40 +0100
+Subject: [PATCH 9/9] Rework orphan handling in dup mode
+
+The old code had problems when the updaters contained other
+installed packages.
+---
+ src/rules.c  | 193 +++++++++++++++++++++++++++++++++++++++++++----------------
+ src/rules.h  |   3 +-
+ src/solver.c |   7 ++-
+ 3 files changed, 149 insertions(+), 54 deletions(-)
+
+diff --git a/src/rules.c b/src/rules.c
+index 4cd53d3..0e2c955 100644
+--- a/src/rules.c
++++ b/src/rules.c
+@@ -1170,35 +1170,56 @@ solver_addpkgrulesforupdaters(Solver *solv, Solvable *s, Map *m, int allow_all)
+  ***
+  ***/
+ 
++static int
++dup_maykeepinstalled(Solver *solv, Solvable *s)
++{
++  Pool *pool = solv->pool;
++  Id ip, pp;
++
++  if (solv->dupmap.size && MAPTST(&solv->dupmap,  s - pool->solvables))
++    return 1;
++  /* is installed identical to a good one? */
++  FOR_PROVIDES(ip, pp, s->name)
++    {
++      Solvable *is = pool->solvables + ip;
++      if (is->evr != s->evr)
++	continue;
++      if (solv->dupmap.size)
++	{
++	  if (!MAPTST(&solv->dupmap, ip))
++	    continue;
++	}
++      else if (is->repo == pool->installed)
++	continue;
++      if (solvable_identical(s, is))
++	return 1;
++    }
++  return 0;
++}
++
++
+ static Id
+-finddistupgradepackages(Solver *solv, Solvable *s, Queue *qs, int allow_all)
++finddistupgradepackages(Solver *solv, Solvable *s, Queue *qs)
+ {
+   Pool *pool = solv->pool;
+-  int i;
++  int i, j;
+ 
+-  policy_findupdatepackages(solv, s, qs, allow_all ? allow_all : 2);
+-  if (!qs->count)
++  policy_findupdatepackages(solv, s, qs, 2);
++  if (qs->count)
+     {
+-      if (allow_all)
+-        return 0;		/* orphaned, don't create feature rule */
+-      /* check if this is an orphaned package */
+-      policy_findupdatepackages(solv, s, qs, 1);
+-      if (!qs->count)
+-	return 0;		/* orphaned, don't create update rule */
+-      qs->count = 0;
+-      return -SYSTEMSOLVABLE;	/* supported but not installable */
++      /* remove installed packages we can't keep */
++      for (i = j = 0; i < qs->count; i++)
++	{
++	  Solvable *ns = pool->solvables + qs->elements[i];
++	  if (ns->repo == pool->installed && !dup_maykeepinstalled(solv, ns))
++	    continue;
++	  qs->elements[j++] = qs->elements[i];
++	}
++      queue_truncate(qs, j);
+     }
+-  if (allow_all)
+-    return s - pool->solvables;
+   /* check if it is ok to keep the installed package */
+-  if (solv->dupmap.size && MAPTST(&solv->dupmap,  s - pool->solvables))
++  if (dup_maykeepinstalled(solv, s))
+     return s - pool->solvables;
+-  for (i = 0; i < qs->count; i++)
+-    {
+-      Solvable *ns = pool->solvables + qs->elements[i];
+-      if (s->evr == ns->evr && solvable_identical(s, ns))
+-        return s - pool->solvables;
+-    }
+   /* nope, it must be some other package */
+   return -SYSTEMSOLVABLE;
+ }
+@@ -1240,6 +1261,73 @@ set_specialupdaters(Solver *solv, Solvable *s, Id d)
+   solv->specialupdaters[s - solv->pool->solvables - installed->start] = d;
+ }
+ 
++#ifdef ENABLE_LINKED_PKGS
++/* Check if this is a linked pseudo package. As it is linked, we do not need an update/feature rule */
++static inline int
++is_linked_pseudo_package(Solver *solv, Solvable *s)
++{
++  Pool *pool = solv->pool;
++  if (solv->instbuddy && solv->instbuddy[s - pool->solvables - solv->installed->start])
++    {
++      const char *name = pool_id2str(pool, s->name);
++      if (strncmp(name, "pattern:", 8) == 0 || strncmp(name, "application:", 12) == 0)
++	return 1;
++    }
++  return 0;
++}
++#endif
++
++void
++solver_addfeaturerule(Solver *solv, Solvable *s)
++{
++  Pool *pool = solv->pool;
++  int i;
++  Id p;
++  Queue qs;
++  Id qsbuf[64];
++
++#ifdef ENABLE_LINKED_PKGS
++  if (is_linked_pseudo_package(solv, s))
++    {
++      solver_addrule(solv, 0, 0, 0);	/* no feature rules for those */
++      return;
++    }
++#endif
++  queue_init_buffer(&qs, qsbuf, sizeof(qsbuf)/sizeof(*qsbuf));
++  p = s - pool->solvables;
++  policy_findupdatepackages(solv, s, &qs, 1);
++  if (solv->dupmap_all || (solv->dupinvolvedmap.size && MAPTST(&solv->dupinvolvedmap, p)))
++    {
++      if (!dup_maykeepinstalled(solv, s))
++	{
++	  for (i = 0; i < qs.count; i++)
++	    {
++	      Solvable *ns = pool->solvables + qs.elements[i];
++	      if (ns->repo != pool->installed || dup_maykeepinstalled(solv, ns))
++		break;
++	    }
++	  if (i == qs.count)
++	    {
++	      solver_addrule(solv, 0, 0, 0);	/* this is an orphan */
++	      queue_free(&qs);
++	      return;
++	    }
++	}
++    }
++  if (qs.count > 1)
++    {
++      Id d = pool_queuetowhatprovides(pool, &qs);
++      queue_free(&qs);
++      solver_addrule(solv, p, 0, d);	/* allow update of s */
++    }
++  else
++    {
++      Id d = qs.count ? qs.elements[0] : 0;
++      queue_free(&qs);
++      solver_addrule(solv, p, d, 0);	/* allow update of s */
++    }
++}
++
+ /*-------------------------------------------------------------------
+  *
+  * add rule for update
+@@ -1249,7 +1337,7 @@ set_specialupdaters(Solver *solv, Solvable *s, Id d)
+  */
+ 
+ void
+-solver_addupdaterule(Solver *solv, Solvable *s, int allow_all)
++solver_addupdaterule(Solver *solv, Solvable *s)
+ {
+   /* installed packages get a special upgrade allowed rule */
+   Pool *pool = solv->pool;
+@@ -1257,48 +1345,53 @@ solver_addupdaterule(Solver *solv, Solvable *s, int allow_all)
+   Queue qs;
+   Id qsbuf[64];
+   int isorphaned = 0;
++  Rule *r;
++  int islinkedpseudo = 0;
+ 
+-  queue_init_buffer(&qs, qsbuf, sizeof(qsbuf)/sizeof(*qsbuf));
+   p = s - pool->solvables;
++#ifdef ENABLE_LINKED_PKGS
++  islinkedpseudo = is_linked_pseudo_package(solv, s);
++#endif
++
++  /* Orphan detection. We cheat by looking at the feature rule, which
++   * we already calculated */
++  r = solv->rules + solv->featurerules + (p - solv->installed->start);
++  if (!r->p && !islinkedpseudo)
++    {
++      p = 0;
++      queue_push(&solv->orphaned, s - pool->solvables);		/* an orphaned package */
++      if (solv->keep_orphans && !(solv->droporphanedmap_all || (solv->droporphanedmap.size && MAPTST(&solv->droporphanedmap, s - pool->solvables - solv->installed->start))))
++	p = s - pool->solvables;	/* keep this orphaned package installed */
++      solver_addrule(solv, p, 0, 0);
++      return;
++    }
++
++  queue_init_buffer(&qs, qsbuf, sizeof(qsbuf)/sizeof(*qsbuf));
+   /* find update candidates for 's' */
+   if (solv->dupmap_all || (solv->dupinvolvedmap.size && MAPTST(&solv->dupinvolvedmap, p)))
+-    p = finddistupgradepackages(solv, s, &qs, allow_all);
++    p = finddistupgradepackages(solv, s, &qs);
+   else
+-    policy_findupdatepackages(solv, s, &qs, allow_all);
++    policy_findupdatepackages(solv, s, &qs, 0);
+ 
+ #ifdef ENABLE_LINKED_PKGS
+-  if (solv->instbuddy && solv->instbuddy[s - pool->solvables - solv->installed->start])
++  if (islinkedpseudo)
+     {
+-      const char *name = pool_id2str(pool, s->name);
+-      if (strncmp(name, "pattern:", 8) == 0 || strncmp(name, "application:", 12) == 0)
++      /* a linked pseudo package. As it is linked, we do not need an update/feature rule */
++      /* nevertheless we set specialupdaters so we can update */
++      solver_addrule(solv, 0, 0, 0);
++      if (qs.count)
+ 	{
+-	  /* a linked pseudo package. As it is linked, we do not need an update/feature rule */
+-	  /* nevertheless we set specialupdaters so we can update */
+-	  solver_addrule(solv, 0, 0, 0);
+-	  if (!allow_all && qs.count)
+-	    {
+-	      if (p != -SYSTEMSOLVABLE)
+-	        queue_unshift(&qs, p);
+-	      if (qs.count)
+-	        set_specialupdaters(solv, s, pool_queuetowhatprovides(pool, &qs));
+-	    }
+-	  queue_free(&qs);
+-	  return;
++	  if (p != -SYSTEMSOLVABLE)
++	    queue_unshift(&qs, p);
++	  if (qs.count)
++	    set_specialupdaters(solv, s, pool_queuetowhatprovides(pool, &qs));
+ 	}
+-    }
+-#endif
+-
+-  if (!allow_all && !p)		/* !p implies qs.count == 0 */
+-    {
+-      queue_push(&solv->orphaned, s - pool->solvables);		/* an orphaned package */
+-      if (solv->keep_orphans && !(solv->droporphanedmap_all || (solv->droporphanedmap.size && MAPTST(&solv->droporphanedmap, s - pool->solvables - solv->installed->start))))
+-	p = s - pool->solvables;	/* keep this orphaned package installed */
+       queue_free(&qs);
+-      solver_addrule(solv, p, 0, 0);
+       return;
+     }
++#endif
+ 
+-  if (!allow_all && qs.count && solv->multiversion.size)
++  if (qs.count && solv->multiversion.size)
+     {
+       int i, j;
+ 
+diff --git a/src/rules.h b/src/rules.h
+index 606819b..29325ea 100644
+--- a/src/rules.h
++++ b/src/rules.h
+@@ -111,7 +111,8 @@ extern void solver_addpkgrulesforlinked(struct _Solver *solv, Map *m);
+ extern void solver_addpkgrulesforupdaters(struct _Solver *solv, Solvable *s, Map *m, int allow_all);
+ 
+ /* update/feature rules */
+-extern void solver_addupdaterule(struct _Solver *solv, Solvable *s, int allow_all);
++extern void solver_addfeaturerule(struct _Solver *solv, Solvable *s);
++extern void solver_addupdaterule(struct _Solver *solv, Solvable *s);
+ 
+ /* infarch rules */
+ extern void solver_addinfarchrules(struct _Solver *solv, Map *addedmap);
+diff --git a/src/solver.c b/src/solver.c
+index 261f367..15a3114 100644
+--- a/src/solver.c
++++ b/src/solver.c
+@@ -3716,7 +3716,7 @@ solver_solve(Solver *solv, Queue *job)
+ 	      solver_addrule(solv, 0, 0, 0);	/* create dummy rule */
+ 	      continue;
+ 	    }
+-	  solver_addupdaterule(solv, s, 1);    /* allow s to be updated */
++	  solver_addfeaturerule(solv, s);
+ 	}
+       /* make sure we accounted for all rules */
+       assert(solv->nrules - solv->featurerules == installed->end - installed->start);
+@@ -3744,7 +3744,7 @@ solver_solve(Solver *solv, Queue *job)
+ 	      solver_addrule(solv, 0, 0, 0);	/* create dummy rule */
+ 	      continue;
+ 	    }
+-	  solver_addupdaterule(solv, s, 0);	/* allowall = 0: downgrades not allowed */
++	  solver_addupdaterule(solv, s);
+ 	  /*
+ 	   * check for and remove duplicate
+ 	   */
+@@ -3759,9 +3759,10 @@ solver_solve(Solver *solv, Queue *job)
+ 	  /* it's also orphaned if the feature rule consists just of the installed package */
+ 	  if (!solv->dupmap_all && sr->p == i && !sr->d && !sr->w2)
+ 	    queue_push(&solv->orphaned, i);
++
+ 	  if (!solver_rulecmp(solv, r, sr))
+ 	    memset(sr, 0, sizeof(*sr));		/* delete unneeded feature rule */
+-	  else
++	  else if (sr->p)
+ 	    solver_disablerule(solv, sr);	/* disable feature rule for now */
+ 	}
+       /* consistency check: we added a rule for _every_ installed solvable */
+-- 
+2.5.0
+

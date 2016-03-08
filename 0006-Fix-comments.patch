@@ -1,0 +1,30 @@
+From 4bcff7d8e7fadcc0b314aa654ce97579db3bbe1a Mon Sep 17 00:00:00 2001
+From: Michael Schroeder <mls@suse.de>
+Date: Mon, 29 Feb 2016 14:14:05 +0100
+Subject: [PATCH 5/9] Fix comments
+
+---
+ ext/repo_rpmmd.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/ext/repo_rpmmd.c b/ext/repo_rpmmd.c
+index 77366c2..5ef5c25 100644
+--- a/ext/repo_rpmmd.c
++++ b/ext/repo_rpmmd.c
+@@ -259,11 +259,8 @@ struct parsedata {
+   Id changelog_handle;
+ 
+   int extending;			/* are we extending an existing solvable? */
+-
+-  /* first solvable we added */
+-  int first;
+-  /* cspool ok to use */
+-  int cshash_filled;
++  int first;				/* first solvable we added */
++  int cshash_filled;			/* hash is filled with data */
+ 
+   Hashtable cshash;			/* checksum hash -> offset into csdata */
+   Hashval cshashm;			/* hash mask */
+-- 
+2.5.0
+
