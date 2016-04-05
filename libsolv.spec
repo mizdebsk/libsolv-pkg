@@ -1,61 +1,84 @@
-%{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -r rbconfig -e "puts RbConfig::CONFIG['vendorarchdir'].nil? ? RbConfig::CONFIG['sitearchdir'] : RbConfig::CONFIG['vendorarchdir']")}
-%filter_provides_in %{perl_vendorarch}/.*\.so$
-%filter_provides_in %{python2_sitearch}/.*\.so$
+%global libname solv
+
 %if 0%{?fedora}
-%bcond_without python3
-%filter_provides_in %{python3_sitearch}/.*\.so$
-%global _cmake_opts \\\
-            -DCMAKE_BUILD_TYPE=RelWithDebInfo \\\
-            -DENABLE_PERL=1 \\\
-            -DENABLE_PYTHON=1 \\\
-            -DENABLE_RUBY=1 \\\
-            -DUSE_VENDORDIRS=1 \\\
-            -DFEDORA=1 \\\
-            -DENABLE_DEBIAN=1 \\\
-            -DENABLE_ARCHREPO=1 \\\
-            -DENABLE_LZMA_COMPRESSION=1 \\\
-            -DMULTI_SEMANTICS=1 \\\
-            -DENABLE_COMPLEX_DEPS=1 \\\
-            %{nil}
+%bcond_without perl_bindings
+%bcond_without ruby_bindings
+%bcond_without python_bindings
+%if %{with python_bindings}
+  %bcond_without python3
+%endif
+%bcond_without comps
+%bcond_without appdata
+%bcond_without debian_repo
+%bcond_without arch_repo
+%bcond_without helix_repo
+%bcond_without multi_symantics
+%bcond_without complex_deps
 %else
-%bcond_with python3
-%global _cmake_opts \\\
-            -DCMAKE_BUILD_TYPE=RelWithDebInfo \\\
-            -DFEDORA=1 \\\
-            -DENABLE_LZMA_COMPRESSION=1 \\\
-            %{nil}
+%bcond_with perl_bindings
+%bcond_with ruby_bindings
+%bcond_with python_bindings
+%if %{with python_bindings}
+  %bcond_with python3
 %endif
-%filter_provides_in %{ruby_vendorarch}/.*\.so$
-%filter_setup
+%bcond_with comps
+%bcond_with appdata
+%bcond_with debian_repo
+%bcond_with arch_repo
+%bcond_with helix_repo
+%bcond_with multi_symantics
+%bcond_with complex_deps
+%endif
 
-Name:		libsolv
-Version:	0.6.19
-Release:	2%{?dist}
-License:	BSD
-Url:		https://github.com/openSUSE/libsolv
-Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
-Patch0:		0001-ruby-make-compatible-with-ruby-2.2.patch
-Patch1:   0002-Add-repodata_lookup_dirstrarray_uninternalized-metho.patch
-Patch2:   0003-Do-not-create-a-checksum-hash-when-we-re-not-extendi.patch
-Patch3:   0004-solv_hex2bin-don-t-eat-nibbles.patch
-Patch4:   0005-Use-less-memory-when-extending-packages.patch
-Patch5:   0006-Fix-comments.patch
-Patch6:   0007-rpmmd-diskusage-prepend-a-to-the-dir-if-not-already-.patch
-Patch7:   0008-Split-diskusage-and-fileprovides-code-into-separate-.patch
-Patch8:   0009-Make-_Pool_tmpspace-definition-internal.patch
-Patch9:   0010-Rework-orphan-handling-in-dup-mode.patch
+%global _cmake_opts                               \\\
+    -DFEDORA=1                                    \\\
+    -DENABLE_RPMDB=ON                             \\\
+    -DENABLE_RPMDB_BYRPMHEADER=ON                 \\\
+    -DENABLE_RPMMD=ON                             \\\
+    %{?with_comps:-DENABLE_COMPS=ON}              \\\
+    %{?with_appdata:-DENABLE_APPDATA=ON}          \\\
+    -DUSE_VENDORDIRS=ON                           \\\
+    -DENABLE_LZMA_COMPRESSION=ON                  \\\
+    -DENABLE_BZIP2_COMPRESSION=ON                 \\\
+    %{?with_debian_repo:-DENABLE_DEBIAN=ON}       \\\
+    %{?with_arch_repo:-DENABLE_ARCHREPO=ON}       \\\
+    %{?with_helix_repo:-DENABLE_HELIXREPO=ON}     \\\
+    %{?with_multi_symantics:-DMULTI_SYMANTICS=ON} \\\
+    %{?with_complex_deps:-DENABLE_COMPLEX_DEPS=1} \\\
+    %{nil}
 
-Group:		Development/Libraries
-Summary:	Package dependency solver
-BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
-BuildRequires:	swig
-%if 0%{?fedora}
-BuildRequires:	perl perl-devel ruby rubypick rubygems ruby-devel python2-devel
-%endif
-%if %{with python3}
-BuildRequires:	python3-devel
-%endif
-BuildRequires:  xz-devel bzip2-devel
+Name:           lib%{libname}
+Version:        0.6.19
+Release:        3%{?dist}
+Summary:        Package dependency solver
+
+License:        BSD
+URL:            https://github.com/openSUSE/libsolv
+Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
+Patch0:			0001-ruby-make-compatible-with-ruby-2.2.patch
+Patch1:   		0002-Add-repodata_lookup_dirstrarray_uninternalized-metho.patch
+Patch2:   		0003-Do-not-create-a-checksum-hash-when-we-re-not-extendi.patch
+Patch3:   		0004-solv_hex2bin-don-t-eat-nibbles.patch
+Patch4:   		0005-Use-less-memory-when-extending-packages.patch
+Patch5:   		0006-Fix-comments.patch
+Patch6:   		0007-rpmmd-diskusage-prepend-a-to-the-dir-if-not-already-.patch
+Patch7:   		0008-Split-diskusage-and-fileprovides-code-into-separate-.patch
+Patch8:   		0009-Make-_Pool_tmpspace-definition-internal.patch
+Patch9:   		0010-Rework-orphan-handling-in-dup-mode.patch
+
+BuildRequires:  cmake
+BuildRequires:  gcc-c++
+BuildRequires:  pkgconfig(rpm)
+BuildRequires:  zlib-devel
+BuildRequires:  expat-devel
+# -DFEDORA=1
+# -DENABLE_RPMDB=ON
+BuildRequires:  libdb-devel
+# -DENABLE_LZMA_COMPRESSION=ON
+BuildRequires:  xz-devel
+# -DENABLE_BZIP2_COMPRESSION=ON
+BuildRequires:  bzip2-devel
+
 %description
 A free package dependency solver using a satisfiability algorithm. The
 library is based on two major, but independent, blocks:
@@ -67,173 +90,233 @@ library is based on two major, but independent, blocks:
   resolving package dependencies.
 
 %package devel
-Summary:	A new approach to package dependency solving
-Group:		Development/Libraries
-Requires:	libsolv-tools%{?_isa} = %{version}-%{release}
-Requires:	libsolv%{?_isa} = %{version}-%{release}
-Requires:	rpm-devel%{?_isa}
-Requires:	cmake
+Summary:        Development files for %{name}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       rpm-devel%{?_isa}
 
 %description devel
-Development files for libsolv,
+Development files for %{name}.
 
 %package tools
-Summary:	A new approach to package dependency solving
-Group:		Development/Libraries
-Requires:	gzip bzip2 coreutils
-Requires:	libsolv%{?_isa} = %{version}-%{release}
+Summary:        Package dependency solver tools
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+# repo2solv dependencies. All of those are used in shell-script.
+Requires:       /usr/bin/gzip
+Requires:       /usr/bin/bzip2
+Requires:       /usr/bin/lzma
+Requires:       /usr/bin/xz
+Requires:       /usr/bin/cat
+Requires:       /usr/bin/find
 
 %description tools
 Package dependency solver tools.
 
 %package demo
-Summary:	Applications demoing the libsolv library
-Group:		Development/Libraries
-Requires:	curl gnupg2
+Summary:        Applications demoing the %{name} library
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+# solv dependencies. Used as execlp() and system()
+Requires:       /usr/bin/curl
+Requires:       /usr/bin/gpg2
 
 %description demo
-Applications demoing the libsolv library.
+Applications demoing the %{name} library.
 
-%if 0%{?fedora}
-%package -n ruby-solv
-Summary:	Ruby bindings for the libsolv library
-Group:		Development/Languages
-Requires:	libsolv%{?_isa} = %{version}-%{release}
+%if %{with perl_bindings}
+%package -n perl-%{libname}
+Summary:        Perl bindings for the %{name} library
+BuildRequires:  swig
+BuildRequires:  perl-devel
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description -n ruby-solv
-Ruby bindings for sat solver.
+%description -n perl-%{libname}
+Perl bindings for the %{name} library.
 %endif
 
-%if 0%{?fedora}
-%package -n python2-solv
-Summary:	Python bindings for the libsolv library
-Group:		Development/Languages
-Requires:	python2
-Requires:	libsolv%{?_isa} = %{version}-%{release}
-%{?python_provide:%python_provide python2-solv}
+%if %{with ruby_bindings}
+%package -n ruby-%{libname}
+Summary:        Ruby bindings for the %{name} library
+BuildRequires:  swig
+BuildRequires:  ruby-devel
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description -n python2-solv
-Python bindings for sat solver.
+%description -n ruby-%{libname}
+Ruby bindings for the %{name} library.
 %endif
+
+%if %{with python_bindings}
+%package -n python2-%{libname}
+Summary:        Python bindings for the %{name} library
+%{?python_provide:%python_provide python2-%{libname}}
+BuildRequires:  swig
+BuildRequires:  python2-devel
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description -n python2-%{libname}
+Python bindings for the %{name} library.
+
+Python 2 version.
 
 %if %{with python3}
-%package -n python3-solv
-Summary:	Python 3 bindings for the libsolv library
-Group:		Development/Languages
-Requires:	python3
-Requires:	libsolv%{?_isa} = %{version}-%{release}
-%{?python_provide:%python_provide python3-solv}
+%package -n python3-%{libname}
+Summary:        Python bindings for the %{name} library
+%{?python_provide:%python_provide python3-%{libname}}
+BuildRequires:  swig
+BuildRequires:  python3-devel
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description -n python3-solv
-Python 3 bindings for sat solver.
+%description -n python3-%{libname}
+Python bindings for the %{name} library.
+
+Python 3 version.
 %endif
-
-%if 0%{?fedora}
-%package -n perl-solv
-Summary:	Perl bindings for the libsolv library
-Group:		Development/Languages
-Requires:	perl
-Requires:	libsolv%{?_isa} = %{version}-%{release}
-
-%description -n perl-solv
-Perl bindings for sat solver.
 %endif
 
 %prep
 %autosetup -p1
-
-%if %{with python3}
-rm -rf %{py3dir}
-cp -a . %{py3dir}
-%endif
+mkdir build build-py2 build-py3
 
 %build
-%cmake %_cmake_opts \
-        -DPythonLibs_FIND_VERSION=2 -DPythonLibs_FIND_VERSION_MAJOR=2 \
-        -DENABLE_BZIP2_COMPRESSION=1
-make %{?_smp_mflags}
+pushd build
+  %cmake %_cmake_opts ../                   \
+    %{?with_perl_bindings:-DENABLE_PERL=ON} \
+    %{?with_ruby_bindings:-DENABLE_RUBY=ON} \
+    %{nil}
+  %make_build
+popd
+
+%if %{with python_bindings}
+pushd build-py2
+  %cmake %_cmake_opts ../             \
+    -DENABLE_PYTHON=ON                \
+    -DPythonLibs_FIND_VERSION=2       \
+    -DPythonLibs_FIND_VERSION_MAJOR=2 \
+    %{nil}
+  make %{?_smp_mflags} bindings_python
+popd
 
 %if %{with python3}
-pushd %{py3dir}/
-  %cmake %_cmake_opts -DENABLE_PYTHON=1 \
-        -DPythonLibs_FIND_VERSION=3 -DPythonLibs_FIND_VERSION_MAJOR=3 \
-        -DENABLE_BZIP2_COMPRESSION=1
-  make %{?_smp_mflags}
+pushd build-py3
+  %cmake %_cmake_opts ../             \
+    -DENABLE_PYTHON=ON                \
+    -DPythonLibs_FIND_VERSION=3       \
+    -DPythonLibs_FIND_VERSION_MAJOR=3 \
+    %{nil}
+  make %{?_smp_mflags} bindings_python
 popd
+%endif
 %endif
 
 %install
-%make_install
+pushd build
+  %make_install
+popd
+
+%if %{with python_bindings}
+pushd build-py2
+  %make_install
+popd
 
 %if %{with python3}
-pushd %{py3dir}/
+pushd build-py3
   %make_install
 popd
 %endif
+%endif
+
+mv %{buildroot}%{_bindir}/repo2solv.sh %{buildroot}%{_bindir}/repo2solv
 
 %check
-make ARGS="-V" test
+pushd build
+  ctest -VV
+popd
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 %files
-%doc LICENSE* README BUGS
-%_libdir/libsolv.so.*
-%_libdir/libsolvext.so.*
-
-%files tools
-%if 0%{?fedora}
-%_bindir/archpkgs2solv
-%_bindir/archrepo2solv
-%_bindir/deb2solv
-%endif
-%_bindir/deltainfoxml2solv
-%_bindir/dumpsolv
-%_bindir/installcheck
-%_bindir/mergesolv
-%_bindir/repo2solv.sh
-%_bindir/repomdxml2solv
-%_bindir/rpmdb2solv
-%_bindir/rpmmd2solv
-%_bindir/rpms2solv
-%_bindir/testsolv
-%_bindir/updateinfoxml2solv
+%license LICENSE*
+%doc README
+%{_libdir}/%{name}.so.*
+%{_libdir}/%{name}ext.so.*
 
 %files devel
-%doc examples/solv/
-%_libdir/libsolv.so
-%_libdir/libsolvext.so
-%_includedir/solv
-%_datadir/cmake/Modules/FindLibSolv.cmake
-%{_mandir}/man?/*
+%{_libdir}/%{name}.so
+%{_libdir}/%{name}ext.so
+%{_includedir}/%{libname}/
 %{_libdir}/pkgconfig/%{name}.pc
+# Own directory because we don't want to depend on cmake
+%dir %{_datadir}/cmake/Modules/
+%{_datadir}/cmake/Modules/FindLibSolv.cmake
+%{_mandir}/man3/%{name}*.3*
+
+# Some small macro to list tools with mans
+%global solv_tool() \
+%{_bindir}/%{1}\
+%{_mandir}/man1/%{1}.1*
+
+%files tools
+%solv_tool deltainfoxml2solv
+%solv_tool dumpsolv
+%solv_tool installcheck
+%solv_tool mergesolv
+%solv_tool repomdxml2solv
+%solv_tool rpmdb2solv
+%solv_tool rpmmd2solv
+%solv_tool rpms2solv
+%solv_tool testsolv
+%solv_tool updateinfoxml2solv
+%if %{with comps}
+  %solv_tool comps2solv
+%endif
+%if %{with appdata}
+  %solv_tool appdata2solv
+%endif
+%if %{with debian_repo}
+  %solv_tool deb2solv
+%endif
+%if %{with arch_repo}
+  %solv_tool archpkgs2solv
+  %solv_tool archrepo2solv
+%endif
+%if %{with helix_repo}
+  %solv_tool helix2solv
+%endif
+%{_bindir}/repo2solv
 
 %files demo
-%_bindir/solv
+%{_bindir}/solv
 
-%if 0%{?fedora}
-%files -n perl-solv
-%doc examples/p5solv
-%{perl_vendorarch}/*
-
-%files -n ruby-solv
-%doc examples/rbsolv
-%{ruby_vendorarch}/*
-
-%files -n python2-solv
-%doc examples/pysolv
-%{python2_sitearch}/*
+%if %{with perl_bindings}
+%files -n perl-%{libname}
+%{perl_vendorarch}/%{libname}.pm
+%{perl_vendorarch}/%{libname}.so
 %endif
 
+%if %{with ruby_bindings}
+%files -n ruby-%{libname}
+%{ruby_vendorarchdir}/%{libname}.so
+%endif
+
+%if %{with python_bindings}
+%files -n python2-%{libname}
+%{python2_sitearch}/_%{libname}.so
+%{python2_sitearch}/%{libname}.py*
+
 %if %{with python3}
-%files -n python3-solv
-%doc examples/pysolv
-%{python3_sitearch}/*
+%files -n python3-%{libname}
+%{python3_sitearch}/_%{libname}.so
+%{python3_sitearch}/%{libname}.py
+%{python3_sitearch}/__pycache__/%{libname}.*
+%endif
 %endif
 
 %changelog
+* Tue Apr 05 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.19-3
+- Reorganize spec file
+- Enable helixrepo feature
+- enable appdata feature
+
 * Tue Mar 8 2016 Jaroslav Mracek <jmracek@redhat.com> - 0.6.19-2
 - Apply 9 patches from upstream
 
