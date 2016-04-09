@@ -48,23 +48,13 @@
     %{nil}
 
 Name:           lib%{libname}
-Version:        0.6.19
-Release:        3%{?dist}
+Version:        0.6.20
+Release:        1%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
 URL:            https://github.com/openSUSE/libsolv
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
-Patch0:			0001-ruby-make-compatible-with-ruby-2.2.patch
-Patch1:   		0002-Add-repodata_lookup_dirstrarray_uninternalized-metho.patch
-Patch2:   		0003-Do-not-create-a-checksum-hash-when-we-re-not-extendi.patch
-Patch3:   		0004-solv_hex2bin-don-t-eat-nibbles.patch
-Patch4:   		0005-Use-less-memory-when-extending-packages.patch
-Patch5:   		0006-Fix-comments.patch
-Patch6:   		0007-rpmmd-diskusage-prepend-a-to-the-dir-if-not-already-.patch
-Patch7:   		0008-Split-diskusage-and-fileprovides-code-into-separate-.patch
-Patch8:   		0009-Make-_Pool_tmpspace-definition-internal.patch
-Patch9:   		0010-Rework-orphan-handling-in-dup-mode.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -312,6 +302,9 @@ popd
 %endif
 
 %changelog
+* Sat Apr 09 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.20-1
+- Update to 0.6.20
+
 * Tue Apr 05 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.19-3
 - Reorganize spec file
 - Enable helixrepo feature
