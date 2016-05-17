@@ -49,12 +49,19 @@
 
 Name:           lib%{libname}
 Version:        0.6.20
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
 URL:            https://github.com/openSUSE/libsolv
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=1318662
+# https://github.com/openSUSE/libsolv/commit/599c58bed474c2a68109ff0649f1effa7ff02c45
+Patch0:         0001-Fix-order-of-solv_extend-arguments-in-repo_add_rpmmd.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1325471
+# https://github.com/openSUSE/libsolv/commit/b1014a431541444bcd39c6ec83c1ec935c7f0aae
+Patch1:         0001-Fix-supplements-handling-when-implicitobsoleteusesco.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -302,6 +309,11 @@ popd
 %endif
 
 %changelog
+* Tue May 17 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.20-2
+- Backport patch to fix crashing on reading some repos (RHBZ #1318662)
+- Backport patch to fix installing multilib packages with weak deps
+  (RHBZ #1325471)
+
 * Sat Apr 09 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.20-1
 - Update to 0.6.20
 
