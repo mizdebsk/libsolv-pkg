@@ -1,34 +1,31 @@
 %global libname solv
 
-%if 0%{?fedora}
-%bcond_without perl_bindings
-%bcond_without ruby_bindings
-%bcond_without python_bindings
-%if %{with python_bindings}
-  %bcond_without python3
-%endif
-%bcond_without comps
-%bcond_without appdata
-%bcond_without debian_repo
-%bcond_without arch_repo
-%bcond_without helix_repo
-%bcond_without multi_symantics
-%bcond_without complex_deps
-%else
+%if 0%{?rhel} && 0%{?rhel} <= 7
 %bcond_with perl_bindings
 %bcond_with ruby_bindings
 %bcond_with python_bindings
 %if %{with python_bindings}
   %bcond_with python3
 %endif
-%bcond_with comps
-%bcond_with appdata
+%else
+%bcond_without perl_bindings
+%bcond_without ruby_bindings
+%bcond_without python_bindings
+%if %{with python_bindings}
+  %bcond_without python3
+%endif
+%endif
 %bcond_with debian_repo
 %bcond_with arch_repo
 %bcond_with helix_repo
+# Creates special prefixed pseudo-packages from appdata metadata
+%bcond_with appdata
+# Creates special prefixed "group:", "category:" pseudo-packages
+%bcond_without comps
+# For rich dependencies
+%bcond_without complex_deps
+# For handling deb + rpm at the same time
 %bcond_with multi_symantics
-%bcond_with complex_deps
-%endif
 
 %global _cmake_opts                               \\\
     -DFEDORA=1                                    \\\
@@ -49,7 +46,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.21
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -302,6 +299,9 @@ popd
 %endif
 
 %changelog
+* Mon May 30 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.21-2
+- Modify enabled/disabled features
+
 * Wed May 18 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.21-1
 - Update to 0.6.21
 
@@ -347,7 +347,7 @@ popd
 - Enable bz2 compression support (Mikolaj Izdebski <mizdebsk@redhat.com>) (RhBug:1226647)
 
 * Thu Nov 26 2015 Adam Williamson <awilliam@redhat.com> - 0.6.14-6
-- revert obsolete, as %python_provide does it (undocumented)
+- revert obsolete, as %%python_provide does it (undocumented)
 
 * Wed Nov 18 2015 Adam Williamson <awilliam@redhat.com> - 0.6.14-5
 - adjust obsolete for stupid packaging
