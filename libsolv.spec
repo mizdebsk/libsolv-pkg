@@ -15,8 +15,6 @@
   %bcond_without python3
 %endif
 %endif
-%bcond_with debian_repo
-%bcond_with arch_repo
 %bcond_with helix_repo
 # Creates special prefixed pseudo-packages from appdata metadata
 %bcond_with appdata
@@ -24,8 +22,17 @@
 %bcond_without comps
 # For rich dependencies
 %bcond_without complex_deps
+%if 0%{?rhel}
+%bcond_with debian_repo
+%bcond_with arch_repo
 # For handling deb + rpm at the same time
 %bcond_with multi_symantics
+%else
+%bcond_without debian_repo
+%bcond_without arch_repo
+# For handling deb + rpm at the same time
+%bcond_without multi_symantics
+%endif
 
 %global _cmake_opts                               \\\
     -DFEDORA=1                                    \\\
@@ -46,7 +53,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.21
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -299,6 +306,9 @@ popd
 %endif
 
 %changelog
+* Mon Jun 06 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.21-3
+- Enable deb/arch support for non-rhel distros
+
 * Mon May 30 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.21-2
 - Modify enabled/disabled features
 
