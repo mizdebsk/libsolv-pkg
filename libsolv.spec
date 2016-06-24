@@ -123,6 +123,7 @@ Applications demoing the %{name} library.
 Summary:        Perl bindings for the %{name} library
 BuildRequires:  swig
 BuildRequires:  perl-devel
+BuildRequires:  perl-generators
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description -n perl-%{libname}
