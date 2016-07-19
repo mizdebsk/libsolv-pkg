@@ -53,7 +53,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.22
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -310,6 +310,9 @@ popd
 %endif
 
 %changelog
+* Tue Jul 19 2016 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.22-2
+- https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
+
 * Tue Jun 14 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.22-1
 - Update to 0.6.22
 - Backport patch which will help to not autoremove needed packages
