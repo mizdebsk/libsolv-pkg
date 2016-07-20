@@ -53,15 +53,24 @@
 
 Name:           lib%{libname}
 Version:        0.6.22
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
 URL:            https://github.com/openSUSE/libsolv
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 
-# https://github.com/openSUSE/libsolv/commit/4e245d61daa731ebab0ac7e0f7bd87ba6c63f116
+# Backported patches
+
+# do not remove "unneeded" packages even something another provides required thing
+# (broken case for 3rd shitty-rpms)
 Patch0001:      0001-Change-cleandeps-code-so-that-it-keeps-all-providers.patch
+Patch0002:      0002-Improve-last-commit-so-that-self-providing-requires-.patch
+# when obsoleting packages - prefer same architecture
+# (as we don't use %{?isa} for Obsoletes)
+Patch0002:      0001-Also-look-at-the-arch-when-sorting-obsoleters.patch
+# Don't show "unneded" packages after enforced multilib lockstep
+Patch0003:      0001-Take-lockstep-into-account-when-calculating-unneeded.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -310,6 +319,9 @@ popd
 %endif
 
 %changelog
+* Wed Jul 20 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.22-3
+- Backport couple of patches from upstream
+
 * Tue Jul 19 2016 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.22-2
 - https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
 

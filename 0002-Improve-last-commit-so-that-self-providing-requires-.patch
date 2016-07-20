@@ -1,0 +1,50 @@
+From b2fd114deaad01295b42a601ea66074fe8028a5c Mon Sep 17 00:00:00 2001
+From: Michael Schroeder <mls@suse.de>
+Date: Tue, 14 Jun 2016 14:51:22 +0200
+Subject: [PATCH 2/2] Improve last commit so that self-providing requires don't
+ pull in other providers
+
+---
+ src/rules.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/src/rules.c b/src/rules.c
+index 07c293a..797916f 100644
+--- a/src/rules.c
++++ b/src/rules.c
+@@ -3870,6 +3870,8 @@ complex_cleandeps_addback(Pool *pool, Id ip, Id req, Map *im, Map *installedm, Q
+ 	      if (!MAPTST(installedm, -p))
+ 	        break;
+ 	    }
++	  else if (p == ip)
++	    break;
+ 	}
+       if (!p)
+ 	{
+@@ -4399,6 +4401,11 @@ solver_createcleandepsmap(Solver *solv, Map *cleandepsmap, int unneeded)
+ 		}
+ #endif
+ 	      FOR_PROVIDES(p, pp, req)
++		if (p == ip)
++		  break;
++	      if (p)
++		continue;
++	      FOR_PROVIDES(p, pp, req)
+ 		{
+ 		  if (MAPTST(&im, p))
+ 		    continue;
+@@ -4430,6 +4437,11 @@ solver_createcleandepsmap(Solver *solv, Map *cleandepsmap, int unneeded)
+ 		}
+ #endif
+ 	      FOR_PROVIDES(p, pp, req)
++		if (p == ip)
++		  break;
++	      if (p)
++		continue;
++	      FOR_PROVIDES(p, pp, req)
+ 		{
+ 		  if (MAPTST(&im, p))
+ 		    continue;
+-- 
+2.7.4
+
