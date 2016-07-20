@@ -68,9 +68,9 @@ Patch0001:      0001-Change-cleandeps-code-so-that-it-keeps-all-providers.patch
 Patch0002:      0002-Improve-last-commit-so-that-self-providing-requires-.patch
 # when obsoleting packages - prefer same architecture
 # (as we don't use %{?isa} for Obsoletes)
-Patch0002:      0001-Also-look-at-the-arch-when-sorting-obsoleters.patch
+Patch0003:      0001-Also-look-at-the-arch-when-sorting-obsoleters.patch
 # Don't show "unneded" packages after enforced multilib lockstep
-Patch0003:      0001-Take-lockstep-into-account-when-calculating-unneeded.patch
+Patch0004:      0001-Take-lockstep-into-account-when-calculating-unneeded.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
