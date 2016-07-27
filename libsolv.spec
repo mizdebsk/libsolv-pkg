@@ -52,25 +52,13 @@
     %{nil}
 
 Name:           lib%{libname}
-Version:        0.6.22
-Release:        3%{?dist}
+Version:        0.6.23
+Release:        1%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
 URL:            https://github.com/openSUSE/libsolv
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
-
-# Backported patches
-
-# do not remove "unneeded" packages even something another provides required thing
-# (broken case for 3rd shitty-rpms)
-Patch0001:      0001-Change-cleandeps-code-so-that-it-keeps-all-providers.patch
-Patch0002:      0002-Improve-last-commit-so-that-self-providing-requires-.patch
-# when obsoleting packages - prefer same architecture
-# (as we don't use %{?isa} for Obsoletes)
-Patch0003:      0001-Also-look-at-the-arch-when-sorting-obsoleters.patch
-# Don't show "unneded" packages after enforced multilib lockstep
-Patch0004:      0001-Take-lockstep-into-account-when-calculating-unneeded.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -319,6 +307,9 @@ popd
 %endif
 
 %changelog
+* Wed Jul 27 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.23-1
+- Update to 0.6.23
+
 * Wed Jul 20 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.22-3
 - Backport couple of patches from upstream
 
