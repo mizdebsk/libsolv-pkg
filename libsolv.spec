@@ -53,12 +53,14 @@
 
 Name:           lib%{libname}
 Version:        0.6.23
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
 URL:            https://github.com/openSUSE/libsolv
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
+
+Patch0001:      0001-testcase-replace-i-with-repoid.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -307,6 +309,9 @@ popd
 %endif
 
 %changelog
+* Wed Aug 03 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.23-2
+- Backport patch to fix dnf --debugsolver crash (RHBZ #1361831)
+
 * Wed Jul 27 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.23-1
 - Update to 0.6.23
 

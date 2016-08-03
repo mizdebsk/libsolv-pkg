@@ -1,0 +1,39 @@
+From e7e1881574996abed4ac46eac3ebb504004eb29a Mon Sep 17 00:00:00 2001
+From: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+Date: Sun, 31 Jul 2016 18:54:33 +0200
+Subject: [PATCH] testcase: replace i with repoid
+
+looks like it was typo.
+
+Closes: https://bugzilla.redhat.com/show_bug.cgi?id=1361831
+Closes: https://github.com/openSUSE/libsolv/issues/150
+Signed-off-by: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+---
+ ext/testcase.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ext/testcase.c b/ext/testcase.c
+index 52c139f..5749dfa 100644
+--- a/ext/testcase.c
++++ b/ext/testcase.c
+@@ -2328,7 +2328,7 @@ testcase_write(Solver *solv, const char *dir, int resultflags, const char *testc
+       Repo *repo = pool_id2repo(pool, repoid);
+       char *buf = solv_malloc((repo->name ? strlen(repo->name) : 0) + 40);
+       char *mp;
+-      orignames[i] = repo->name;
++      orignames[repoid] = repo->name;
+       if (!repo->name || !repo->name[0])
+         sprintf(buf, "#%d", repoid);
+       else
+@@ -2353,7 +2353,7 @@ testcase_write(Solver *solv, const char *dir, int resultflags, const char *testc
+     {
+       Repo *repo = pool_id2repo(pool, repoid);
+       solv_free((void *)repo->name);
+-      repo->name = orignames[i];
++      repo->name = orignames[repoid];
+     }
+   solv_free(orignames);
+   return r;
+-- 
+2.7.4
+
