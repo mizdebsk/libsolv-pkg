@@ -15,7 +15,6 @@
   %bcond_without python3
 %endif
 %endif
-%bcond_with helix_repo
 # Creates special prefixed pseudo-packages from appdata metadata
 %bcond_with appdata
 # Creates special prefixed "group:", "category:" pseudo-packages
@@ -27,11 +26,13 @@
 %bcond_with arch_repo
 # For handling deb + rpm at the same time
 %bcond_with multi_symantics
+%bcond_with helix_repo
 %else
 %bcond_without debian_repo
 %bcond_without arch_repo
 # For handling deb + rpm at the same time
 %bcond_without multi_symantics
+%bcond_without helix_repo
 %endif
 
 %global _cmake_opts                               \\\
@@ -53,7 +54,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.23
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -309,6 +310,9 @@ popd
 %endif
 
 %changelog
+* Fri Aug 12 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.23-3
+- Enable helixrepo on Fedora
+
 * Wed Aug 03 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.23-2
 - Backport patch to fix dnf --debugsolver crash (RHBZ #1361831)
 
