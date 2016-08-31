@@ -22,17 +22,19 @@
 # For rich dependencies
 %bcond_without complex_deps
 %if 0%{?rhel}
+%bcond_with helix_repo
+%bcond_with suse_repo
 %bcond_with debian_repo
 %bcond_with arch_repo
 # For handling deb + rpm at the same time
 %bcond_with multi_symantics
-%bcond_with helix_repo
 %else
+%bcond_without helix_repo
+%bcond_without suse_repo
 %bcond_without debian_repo
 %bcond_without arch_repo
 # For handling deb + rpm at the same time
 %bcond_without multi_symantics
-%bcond_without helix_repo
 %endif
 
 %global _cmake_opts                               \\\
@@ -45,16 +47,17 @@
     -DUSE_VENDORDIRS=ON                           \\\
     -DENABLE_LZMA_COMPRESSION=ON                  \\\
     -DENABLE_BZIP2_COMPRESSION=ON                 \\\
+    %{?with_helix_repo:-DENABLE_HELIXREPO=ON}     \\\
+    %{?with_suse_repo:-DENABLE_SUSEREPO=ON}       \\\
     %{?with_debian_repo:-DENABLE_DEBIAN=ON}       \\\
     %{?with_arch_repo:-DENABLE_ARCHREPO=ON}       \\\
-    %{?with_helix_repo:-DENABLE_HELIXREPO=ON}     \\\
     %{?with_multi_symantics:-DMULTI_SYMANTICS=ON} \\\
     %{?with_complex_deps:-DENABLE_COMPLEX_DEPS=1} \\\
     %{nil}
 
 Name:           lib%{libname}
 Version:        0.6.23
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -280,6 +283,10 @@ popd
 %if %{with helix_repo}
   %solv_tool helix2solv
 %endif
+%if %{with suse_repo}
+  %solv_tool susetags2solv
+%endif
+
 %{_bindir}/repo2solv
 
 %files demo
@@ -310,6 +317,9 @@ popd
 %endif
 
 %changelog
+* Sat Aug 27 2016 Neal Gompa <ngompa13@gmail.com> - 0.6.23-4
+- Enable suserepo on Fedora to enable making openSUSE containers with Zypper
+
 * Fri Aug 12 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.23-3
 - Enable helixrepo on Fedora
 
