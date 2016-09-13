@@ -57,7 +57,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.23
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -101,12 +101,12 @@ Development files for %{name}.
 Summary:        Package dependency solver tools
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 # repo2solv dependencies. All of those are used in shell-script.
-Requires:       /usr/bin/gzip
-Requires:       /usr/bin/bzip2
-Requires:       /usr/bin/lzma
-Requires:       /usr/bin/xz
-Requires:       /usr/bin/cat
-Requires:       /usr/bin/find
+Requires:       %{_bindir}/gzip
+Requires:       %{_bindir}/bzip2
+Requires:       %{_bindir}/lzma
+Requires:       %{_bindir}/xz
+Requires:       %{_bindir}/cat
+Requires:       %{_bindir}/find
 
 %description tools
 Package dependency solver tools.
@@ -115,8 +115,8 @@ Package dependency solver tools.
 Summary:        Applications demoing the %{name} library
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 # solv dependencies. Used as execlp() and system()
-Requires:       /usr/bin/curl
-Requires:       /usr/bin/gpg2
+Requires:       %{_bindir}/curl
+Requires:       %{_bindir}/gpg2
 
 %description demo
 Applications demoing the %{name} library.
@@ -317,6 +317,9 @@ popd
 %endif
 
 %changelog
+* Tue Sep 13 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.23-5
+- Trivial fixes in spec
+
 * Sat Aug 27 2016 Neal Gompa <ngompa13@gmail.com> - 0.6.23-4
 - Enable suserepo on Fedora to enable making openSUSE containers with Zypper
 
