@@ -27,14 +27,14 @@
 %bcond_with debian_repo
 %bcond_with arch_repo
 # For handling deb + rpm at the same time
-%bcond_with multi_symantics
+%bcond_with multi_semantics
 %else
 %bcond_without helix_repo
 %bcond_without suse_repo
 %bcond_without debian_repo
 %bcond_without arch_repo
 # For handling deb + rpm at the same time
-%bcond_without multi_symantics
+%bcond_without multi_semantics
 %endif
 
 %global _cmake_opts                               \\\
@@ -51,13 +51,13 @@
     %{?with_suse_repo:-DENABLE_SUSEREPO=ON}       \\\
     %{?with_debian_repo:-DENABLE_DEBIAN=ON}       \\\
     %{?with_arch_repo:-DENABLE_ARCHREPO=ON}       \\\
-    %{?with_multi_symantics:-DMULTI_SYMANTICS=ON} \\\
+    %{?with_multi_semantics:-DMULTI_SEMANTICS=ON} \\\
     %{?with_complex_deps:-DENABLE_COMPLEX_DEPS=1} \\\
     %{nil}
 
 Name:           lib%{libname}
 Version:        0.6.23
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -317,6 +317,9 @@ popd
 %endif
 
 %changelog
+* Sat Oct 29 2016 Denis Ollier <larchunix@gmail.com> - 0.6.23-6
+- Typo fixes in spec: s/MULTI_SYMANTICS/MULTI_SEMANTICS/
+
 * Tue Sep 13 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.6.23-5
 - Trivial fixes in spec
 
