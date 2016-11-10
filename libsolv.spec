@@ -56,15 +56,13 @@
     %{nil}
 
 Name:           lib%{libname}
-Version:        0.6.23
-Release:        6%{?dist}
+Version:        0.6.24
+Release:        1%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
 URL:            https://github.com/openSUSE/libsolv
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
-
-Patch0001:      0001-testcase-replace-i-with-repoid.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -317,6 +315,9 @@ popd
 %endif
 
 %changelog
+* Fri Nov 11 2016 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.6.24-1
+- Update to 0.6.24
+
 * Sat Oct 29 2016 Denis Ollier <larchunix@gmail.com> - 0.6.23-6
 - Typo fixes in spec: s/MULTI_SYMANTICS/MULTI_SEMANTICS/
 
