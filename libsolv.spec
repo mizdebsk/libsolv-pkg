@@ -37,27 +37,9 @@
 %bcond_without multi_semantics
 %endif
 
-%global _cmake_opts                               \\\
-    -DFEDORA=1                                    \\\
-    -DENABLE_RPMDB=ON                             \\\
-    -DENABLE_RPMDB_BYRPMHEADER=ON                 \\\
-    -DENABLE_RPMMD=ON                             \\\
-    %{?with_comps:-DENABLE_COMPS=ON}              \\\
-    %{?with_appdata:-DENABLE_APPDATA=ON}          \\\
-    -DUSE_VENDORDIRS=ON                           \\\
-    -DENABLE_LZMA_COMPRESSION=ON                  \\\
-    -DENABLE_BZIP2_COMPRESSION=ON                 \\\
-    %{?with_helix_repo:-DENABLE_HELIXREPO=ON}     \\\
-    %{?with_suse_repo:-DENABLE_SUSEREPO=ON}       \\\
-    %{?with_debian_repo:-DENABLE_DEBIAN=ON}       \\\
-    %{?with_arch_repo:-DENABLE_ARCHREPO=ON}       \\\
-    %{?with_multi_semantics:-DMULTI_SEMANTICS=ON} \\\
-    %{?with_complex_deps:-DENABLE_COMPLEX_DEPS=1} \\\
-    %{nil}
-
 Name:           lib%{libname}
 Version:        0.6.24
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -158,7 +140,7 @@ Python 2 version.
 %if %{with python3}
 %package -n python3-%{libname}
 Summary:        Python bindings for the %{name} library
-%{?python_provide:%python_provide python3-%{libname}}
+%{?python_provide:%python_provide python%{python3_pkgversion}-%{libname}}
 BuildRequires:  swig
 BuildRequires:  python3-devel
 Requires:       %{name}%{?_isa} = %{version}-%{release}
@@ -172,55 +154,42 @@ Python 3 version.
 
 %prep
 %autosetup -p1
-mkdir build build-py2 build-py3
+mkdir build
 
 %build
 pushd build
-  %cmake %_cmake_opts ../                   \
-    %{?with_perl_bindings:-DENABLE_PERL=ON} \
-    %{?with_ruby_bindings:-DENABLE_RUBY=ON} \
-    %{nil}
+  %cmake                                          \
+    -DFEDORA=1                                    \
+    -DENABLE_RPMDB=ON                             \
+    -DENABLE_RPMDB_BYRPMHEADER=ON                 \
+    -DENABLE_RPMMD=ON                             \
+    %{?with_comps:-DENABLE_COMPS=ON}              \
+    %{?with_appdata:-DENABLE_APPDATA=ON}          \
+    -DUSE_VENDORDIRS=ON                           \
+    -DENABLE_LZMA_COMPRESSION=ON                  \
+    -DENABLE_BZIP2_COMPRESSION=ON                 \
+    %{?with_helix_repo:-DENABLE_HELIXREPO=ON}     \
+    %{?with_suse_repo:-DENABLE_SUSEREPO=ON}       \
+    %{?with_debian_repo:-DENABLE_DEBIAN=ON}       \
+    %{?with_arch_repo:-DENABLE_ARCHREPO=ON}       \
+    %{?with_multi_semantics:-DMULTI_SEMANTICS=ON} \
+    %{?with_complex_deps:-DENABLE_COMPLEX_DEPS=1} \
+    %{?with_perl_bindings:-DENABLE_PERL=ON}       \
+    %{?with_ruby_bindings:-DENABLE_RUBY=ON}       \
+%if %{with python_bindings}
+    -DENABLE_PYTHON=ON                            \
+%if %{with python3}
+    -DENABLE_PYTHON3=ON                           \
+%endif
+%endif
+    ..
   %make_build
 popd
-
-%if %{with python_bindings}
-pushd build-py2
-  %cmake %_cmake_opts ../             \
-    -DENABLE_PYTHON=ON                \
-    -DPythonLibs_FIND_VERSION=2       \
-    -DPythonLibs_FIND_VERSION_MAJOR=2 \
-    %{nil}
-  make %{?_smp_mflags} bindings_python
-popd
-
-%if %{with python3}
-pushd build-py3
-  %cmake %_cmake_opts ../             \
-    -DENABLE_PYTHON=ON                \
-    -DPythonLibs_FIND_VERSION=3       \
-    -DPythonLibs_FIND_VERSION_MAJOR=3 \
-    %{nil}
-  make %{?_smp_mflags} bindings_python
-popd
-%endif
-%endif
 
 %install
 pushd build
   %make_install
 popd
-
-%if %{with python_bindings}
-pushd build-py2
-  %make_install
-popd
-
-%if %{with python3}
-pushd build-py3
-  %make_install
-popd
-%endif
-%endif
 
 mv %{buildroot}%{_bindir}/repo2solv.sh %{buildroot}%{_bindir}/repo2solv
 
@@ -315,6 +284,9 @@ popd
 %endif
 
 %changelog
+* Fri Dec 09 2016 Orion Poplawski <orion@cora.nwra.com> - 0.6.24-2
+- Use upstream python build options
+
 * Fri Nov 11 2016 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.6.24-1
 - Update to 0.6.24
 
