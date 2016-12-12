@@ -39,7 +39,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.24
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -284,6 +284,9 @@ popd
 %endif
 
 %changelog
+* Mon Dec 12 2016 Charalampos Stratakis <cstratak@redhat.com> - 0.6.24-3
+- Rebuild for Python 3.6
+
 * Fri Dec 09 2016 Orion Poplawski <orion@cora.nwra.com> - 0.6.24-2
 - Use upstream python build options
 
