@@ -140,7 +140,7 @@ Python 2 version.
 %if %{with python3}
 %package -n python3-%{libname}
 Summary:        Python bindings for the %{name} library
-%{?python_provide:%python_provide python%{python3_pkgversion}-%{libname}}
+%{?python_provide:%python_provide python3-%{libname}}
 BuildRequires:  swig
 BuildRequires:  python3-devel
 Requires:       %{name}%{?_isa} = %{version}-%{release}
