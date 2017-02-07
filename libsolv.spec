@@ -38,8 +38,8 @@
 %endif
 
 Name:           lib%{libname}
-Version:        0.6.24
-Release:        4%{?dist}
+Version:        0.6.25
+Release:        1%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -284,6 +284,9 @@ popd
 %endif
 
 %changelog
+* Tue Feb 07 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.25-1
+- Update to 0.6.25
+
 * Fri Jan 13 2017 Vít Ondruch <vondruch@redhat.com> - 0.6.24-4
 - Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_2.4
 
