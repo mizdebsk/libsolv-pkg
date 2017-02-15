@@ -38,7 +38,7 @@
 %endif
 
 Name:           lib%{libname}
-Version:        0.6.25
+Version:        0.6.26
 Release:        1%{?dist}
 Summary:        Package dependency solver
 
@@ -213,6 +213,7 @@ popd
 %{_libdir}/%{name}ext.so
 %{_includedir}/%{libname}/
 %{_libdir}/pkgconfig/%{name}.pc
+%{_libdir}/pkgconfig/%{name}ext.pc
 # Own directory because we don't want to depend on cmake
 %dir %{_datadir}/cmake/Modules/
 %{_datadir}/cmake/Modules/FindLibSolv.cmake
@@ -284,6 +285,9 @@ popd
 %endif
 
 %changelog
+* Wed Feb 15 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.26-1
+- Update to 0.6.26
+
 * Tue Feb 07 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.25-1
 - Update to 0.6.25
 
