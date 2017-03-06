@@ -39,12 +39,14 @@
 
 Name:           lib%{libname}
 Version:        0.6.26
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
 URL:            https://github.com/openSUSE/libsolv
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
+# https://github.com/openSUSE/libsolv/pull/184
+Patch0001:      0001-build-do-not-ignore-PYTHON3_EXECUTABLE.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -180,6 +182,7 @@ pushd build
     -DENABLE_PYTHON=ON                            \
 %if %{with python3}
     -DENABLE_PYTHON3=ON                           \
+    -DPYTHON3_EXECUTABLE=%{__python3}             \
 %endif
 %endif
     ..
@@ -285,6 +288,9 @@ popd
 %endif
 
 %changelog
+* Mon Mar 06 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.26-2
+- Use %%{__python3} as PYTHON3_EXECUTABLE
+
 * Wed Feb 15 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.26-1
 - Update to 0.6.26
 

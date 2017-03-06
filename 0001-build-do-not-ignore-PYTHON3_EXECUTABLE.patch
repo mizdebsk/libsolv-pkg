@@ -1,0 +1,29 @@
+From 4bef72251fc49c8461e84d4f817522f60b45e1c7 Mon Sep 17 00:00:00 2001
+From: Igor Gnatenko <ignatenko@redhat.com>
+Date: Mon, 6 Mar 2017 12:13:21 +0100
+Subject: [PATCH] build: do not ignore PYTHON3_EXECUTABLE
+
+Signed-off-by: Igor Gnatenko <ignatenko@redhat.com>
+---
+ bindings/python3/CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/bindings/python3/CMakeLists.txt b/bindings/python3/CMakeLists.txt
+index 7a2dca3..09c8e29 100644
+--- a/bindings/python3/CMakeLists.txt
++++ b/bindings/python3/CMakeLists.txt
+@@ -6,9 +6,9 @@
+ # we cannot use FIND_PACKAGE PythonLibs here, as this would
+ # clash with the python variables.
+ #
+-IF (NOT DEFINED ${PYTHON3_EXECUTABLE})
++IF (NOT DEFINED PYTHON3_EXECUTABLE)
+ SET (PYTHON3_EXECUTABLE "/usr/bin/python3")
+-ENDIF (NOT DEFINED ${PYTHON3_EXECUTABLE})
++ENDIF (NOT DEFINED PYTHON3_EXECUTABLE)
+ 
+ EXECUTE_PROCESS(COMMAND ${PYTHON3_EXECUTABLE} -c "from sys import stdout; from distutils import sysconfig; stdout.write(sysconfig.get_python_lib(True))" OUTPUT_VARIABLE PYTHON3_INSTALL_DIR)
+ EXECUTE_PROCESS(COMMAND ${PYTHON3_EXECUTABLE} -c "from sys import stdout; from distutils import sysconfig; stdout.write(sysconfig.get_python_inc())" OUTPUT_VARIABLE PYTHON3_INCLUDE_DIR)
+-- 
+2.12.0
+
