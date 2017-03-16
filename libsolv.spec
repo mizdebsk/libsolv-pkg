@@ -164,11 +164,7 @@ Python 3 version.
 
 %prep
 # XXX: switch to %{?commit:-n %{name}-%{commit}} in RPM 4.14
-%if %{undefined commit}
-%autosetup -p1
-%else
-%autosetup -p1 %{?commit:-n %{name}-%{commit}}
-%endif
+%autosetup -p1 -n %{name}-%{commit}
 mkdir build
 
 %build
