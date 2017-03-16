@@ -1,5 +1,10 @@
 %global libname solv
 
+# number of commits since last release
+%global gitnum 19
+%global commit 22623468dcdfeeaafeec3bd6789dfaf739eb7664
+%global shortcommit %(c=%{commit}; echo ${c:0:7})
+
 %if 0%{?rhel} && 0%{?rhel} <= 7
 %bcond_with perl_bindings
 %bcond_with ruby_bindings
@@ -39,20 +44,23 @@
 
 Name:           lib%{libname}
 Version:        0.6.26
-Release:        2%{?dist}
+Release:        3%{?commit:.git.%{gitnum}.%{shortcommit}}%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
 URL:            https://github.com/openSUSE/libsolv
-Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
-# https://github.com/openSUSE/libsolv/pull/184
-Patch0001:      0001-build-do-not-ignore-PYTHON3_EXECUTABLE.patch
+%if %{undefined commit}
+Source:         %{url}/archive/%{version}/%{name}-%{version}.tar.gz
+%else
+Source:         %{url}/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
+%endif
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(rpm)
 BuildRequires:  zlib-devel
-BuildRequires:  expat-devel
+# -DWITH_LIBXML2=ON
+BuildRequires:  libxml2-devel
 # -DFEDORA=1
 # -DENABLE_RPMDB=ON
 BuildRequires:  libdb-devel
@@ -155,7 +163,7 @@ Python 3 version.
 %endif
 
 %prep
-%autosetup -p1
+%autosetup -p1 %{?commit:-n %{name}-%{commit}}
 mkdir build
 
 %build
@@ -168,6 +176,7 @@ pushd build
     %{?with_comps:-DENABLE_COMPS=ON}              \
     %{?with_appdata:-DENABLE_APPDATA=ON}          \
     -DUSE_VENDORDIRS=ON                           \
+    -DWITH_LIBXML2=ON                             \
     -DENABLE_LZMA_COMPRESSION=ON                  \
     -DENABLE_BZIP2_COMPRESSION=ON                 \
     %{?with_helix_repo:-DENABLE_HELIXREPO=ON}     \
@@ -288,6 +297,10 @@ popd
 %endif
 
 %changelog
+* Thu Mar 16 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.26-3.git.19.2262346
+- Update to latest git
+- Switch to libxml2
+
 * Mon Mar 06 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.26-2
 - Use %%{__python3} as PYTHON3_EXECUTABLE
 
