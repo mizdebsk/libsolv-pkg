@@ -21,7 +21,7 @@
 %endif
 %endif
 # Creates special prefixed pseudo-packages from appdata metadata
-%bcond_with appdata
+%bcond_without appdata
 # Creates special prefixed "group:", "category:" pseudo-packages
 %bcond_without comps
 # For rich dependencies
@@ -44,7 +44,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.26
-Release:        3%{?commit:.git.%{gitnum}.%{shortcommit}}%{?dist}
+Release:        4%{?commit:.git.%{gitnum}.%{shortcommit}}%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -298,6 +298,9 @@ popd
 %endif
 
 %changelog
+* Sat Mar 18 2017 Neal Gompa <ngompa13@gmail.com> - 0.6.26-4.git.19.2262346
+- Enable AppData support (#1427171)
+
 * Thu Mar 16 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.26-3.git.19.2262346
 - Update to latest git
 - Switch to libxml2
