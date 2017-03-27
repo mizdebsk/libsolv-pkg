@@ -1,8 +1,8 @@
 %global libname solv
 
 # number of commits since last release
-%global gitnum 19
-%global commit 22623468dcdfeeaafeec3bd6789dfaf739eb7664
+%global gitnum 20
+%global commit 668e2495d942e888403f47cd5ce140703a6bb3e1
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 %if 0%{?rhel} && 0%{?rhel} <= 7
@@ -44,7 +44,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.26
-Release:        4%{?commit:.git.%{gitnum}.%{shortcommit}}%{?dist}
+Release:        5%{?commit:.git.%{gitnum}.%{shortcommit}}%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
