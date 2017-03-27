@@ -298,6 +298,9 @@ popd
 %endif
 
 %changelog
+* Mon Mar 27 2017 Igor Gnatenko <ignatenko@redhat.com> - 0.6.26-5.git.20.668e249
+- Update to latest snapshot
+
 * Sat Mar 18 2017 Neal Gompa <ngompa13@gmail.com> - 0.6.26-4.git.19.2262346
 - Enable AppData support (#1427171)
 
