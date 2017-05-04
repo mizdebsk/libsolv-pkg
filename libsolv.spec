@@ -1,10 +1,5 @@
 %global libname solv
 
-# number of commits since last release
-%global gitnum 20
-%global commit 668e2495d942e888403f47cd5ce140703a6bb3e1
-%global shortcommit %(c=%{commit}; echo ${c:0:7})
-
 %if 0%{?rhel} && 0%{?rhel} <= 7
 %bcond_with perl_bindings
 %bcond_with ruby_bindings
@@ -43,17 +38,13 @@
 %endif
 
 Name:           lib%{libname}
-Version:        0.6.26
-Release:        5%{?commit:.git.%{gitnum}.%{shortcommit}}%{?dist}
+Version:        0.6.27
+Release:        1%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
 URL:            https://github.com/openSUSE/libsolv
-%if %{undefined commit}
 Source:         %{url}/archive/%{version}/%{name}-%{version}.tar.gz
-%else
-Source:         %{url}/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
-%endif
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -163,8 +154,7 @@ Python 3 version.
 %endif
 
 %prep
-# XXX: switch to %{?commit:-n %{name}-%{commit}} in RPM 4.14
-%autosetup -p1 -n %{name}-%{commit}
+%autosetup -p1
 mkdir build
 
 %build
@@ -298,6 +288,9 @@ popd
 %endif
 
 %changelog
+* Thu May 04 2017 Igor Gnatenko <ignatenko@redhat.com> - 0.6.27-1
+- Update to 0.6.27
+
 * Mon Mar 27 2017 Igor Gnatenko <ignatenko@redhat.com> - 0.6.26-5.git.20.668e249
 - Update to latest snapshot
 
