@@ -182,7 +182,6 @@ pushd build
     -DENABLE_PYTHON=ON                            \
 %if %{with python3}
     -DENABLE_PYTHON3=ON                           \
-    -DPYTHON3_EXECUTABLE=%{__python3}             \
 %endif
 %endif
     ..
