@@ -39,12 +39,17 @@
 
 Name:           lib%{libname}
 Version:        0.6.27
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
 URL:            https://github.com/openSUSE/libsolv
 Source:         %{url}/archive/%{version}/%{name}-%{version}.tar.gz
+
+# https://github.com/openSUSE/libsolv/commit/3b200475c1c3904e38a38f26c6ee24a0dcd6fcf2
+Patch0001:      0001-bindings-expose-sourcepkg-functions.patch
+# https://github.com/openSUSE/libsolv/commit/d8f58f77e7a595db4a4dabf1a1ec0cf4e5145167
+Patch0002:      0001-bindings-do-not-leak-Repo-in-__next__.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -287,6 +292,9 @@ popd
 %endif
 
 %changelog
+* Mon May 29 2017 Igor Gnatenko <ignatenko@redhat.com> - 0.6.27-2
+- Backport few fixes for bindings
+
 * Thu May 04 2017 Igor Gnatenko <ignatenko@redhat.com> - 0.6.27-1
 - Update to 0.6.27
 
