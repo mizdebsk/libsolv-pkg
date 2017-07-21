@@ -1,0 +1,26 @@
+From fe64933a5c9125401f0ae3e928c406d19075c202 Mon Sep 17 00:00:00 2001
+From: Michael Schroeder <mls@suse.de>
+Date: Fri, 21 Jul 2017 13:38:15 +0200
+Subject: [PATCH] yumobs: remove bogus queue_empty() call
+
+The queue_empty made the code only create yumobs rules for one
+dependency. It's surprising that nobody ran into this bug until now.
+---
+ src/rules.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/rules.c b/src/rules.c
+index 26b93ea..6c28cdd 100644
+--- a/src/rules.c
++++ b/src/rules.c
+@@ -3720,7 +3720,6 @@ solver_addyumobsrules(Solver *solv)
+ #if 0
+ printf("checking yumobs for %s\n", pool_solvable2str(pool, s));
+ #endif
+-      queue_empty(&qo);
+       for (opp = solv->obsoletes_data + solv->obsoletes[p - installed->start]; (op = *opp++) != 0;)
+ 	{
+ 	  Solvable *os = pool->solvables + op;
+-- 
+2.13.2
+

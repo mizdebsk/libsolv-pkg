@@ -39,12 +39,16 @@
 
 Name:           lib%{libname}
 Version:        0.6.28
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
 URL:            https://github.com/openSUSE/libsolv
 Source:         %{url}/archive/%{version}/%{name}-%{version}.tar.gz
+
+# https://github.com/openSUSE/libsolv/commit/fe64933a5c9125401f0ae3e928c406d19075c202
+# https://bugzilla.redhat.com/show_bug.cgi?id=1470922
+Patch0001:      0001-yumobs-remove-bogus-queue_empty-call.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -287,16 +291,19 @@ popd
 %endif
 
 %changelog
-* Sat Jul 01 2017 Igor Gnatenko <ignatenko@redhat.com> - 0.6.28-1
+* Fri Jul 21 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.28-2
+- Backport patch for fixing yumobs
+
+* Sat Jul 01 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.28-1
 - Update to 0.6.28
 
-* Mon May 29 2017 Igor Gnatenko <ignatenko@redhat.com> - 0.6.27-2
+* Mon May 29 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.27-2
 - Backport few fixes for bindings
 
-* Thu May 04 2017 Igor Gnatenko <ignatenko@redhat.com> - 0.6.27-1
+* Thu May 04 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.27-1
 - Update to 0.6.27
 
-* Mon Mar 27 2017 Igor Gnatenko <ignatenko@redhat.com> - 0.6.26-5.git.20.668e249
+* Mon Mar 27 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.26-5.git.20.668e249
 - Update to latest snapshot
 
 * Sat Mar 18 2017 Neal Gompa <ngompa13@gmail.com> - 0.6.26-4.git.19.2262346
