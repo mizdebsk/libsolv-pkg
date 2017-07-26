@@ -39,7 +39,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.28
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -291,6 +291,9 @@ popd
 %endif
 
 %changelog
+* Wed Jul 26 2017 Fedora Release Engineering <releng@fedoraproject.org> - 0.6.28-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Fri Jul 21 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.28-2
 - Backport patch for fixing yumobs
 
