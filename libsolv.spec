@@ -39,7 +39,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.28
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -49,6 +49,8 @@ Source:         %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 # https://github.com/openSUSE/libsolv/commit/fe64933a5c9125401f0ae3e928c406d19075c202
 # https://bugzilla.redhat.com/show_bug.cgi?id=1470922
 Patch0001:      0001-yumobs-remove-bogus-queue_empty-call.patch
+# https://github.com/openSUSE/libsolv/commit/7fea982667f20409403e794ab916dbb183681b4b
+Patch0002:      0001-Support-REL_WITHOUT.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -291,6 +293,9 @@ popd
 %endif
 
 %changelog
+* Thu Aug 03 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.28-5
+- Add support for REL_WITHOUT
+
 * Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 0.6.28-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 
