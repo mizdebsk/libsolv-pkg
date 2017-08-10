@@ -39,7 +39,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.28
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -293,6 +293,9 @@ popd
 %endif
 
 %changelog
+* Thu Aug 10 2017 Igor Gnatenko <ignatenko@redhat.com> - 0.6.28-6
+- Rebuilt for RPM soname bump
+
 * Thu Aug 03 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.28-5
 - Add support for REL_WITHOUT
 
