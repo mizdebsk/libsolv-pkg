@@ -39,7 +39,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.28
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -293,6 +293,9 @@ popd
 %endif
 
 %changelog
+* Fri Aug 11 2017 Igor Gnatenko <ignatenko@redhat.com> - 0.6.28-8
+- Rebuilt after RPM update (№ 3)
+
 * Thu Aug 10 2017 Igor Gnatenko <ignatenko@redhat.com> - 0.6.28-7
 - Rebuilt for RPM soname bump
 
