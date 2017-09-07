@@ -38,19 +38,13 @@
 %endif
 
 Name:           lib%{libname}
-Version:        0.6.28
-Release:        8%{?dist}
+Version:        0.6.29
+Release:        1%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
 URL:            https://github.com/openSUSE/libsolv
 Source:         %{url}/archive/%{version}/%{name}-%{version}.tar.gz
-
-# https://github.com/openSUSE/libsolv/commit/fe64933a5c9125401f0ae3e928c406d19075c202
-# https://bugzilla.redhat.com/show_bug.cgi?id=1470922
-Patch0001:      0001-yumobs-remove-bogus-queue_empty-call.patch
-# https://github.com/openSUSE/libsolv/commit/7fea982667f20409403e794ab916dbb183681b4b
-Patch0002:      0001-Support-REL_WITHOUT.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -293,6 +287,9 @@ popd
 %endif
 
 %changelog
+* Thu Sep 07 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.29-1
+- Update to 0.6.29
+
 * Fri Aug 11 2017 Igor Gnatenko <ignatenko@redhat.com> - 0.6.28-8
 - Rebuilt after RPM update (№ 3)
 
