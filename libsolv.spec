@@ -38,14 +38,14 @@
 
 Name:           lib%{libname}
 Version:        0.6.30
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
 URL:            https://github.com/openSUSE/libsolv
 Source:         %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 # https://bugzilla.redhat.com/show_bug.cgi?id=1483553
-Patch0:         0001-fall-back-to-DB_PRIVATE-on-DB_VERSION_MISMATCH.patch
+Patch0:         0001-Fall-back-to-DB_PRIVATE-on-DB_VERSION_MISMATCH-from-.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -288,6 +288,9 @@ popd
 %endif
 
 %changelog
+* Mon Nov 06 2017 Panu Matilainen <pmatilai@redhat.com> - 0.6.30-2
+- Better error message on DB_VERSION_MISMATCH errors
+
 * Tue Oct 24 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-1
 - Update to 0.6.30
 
