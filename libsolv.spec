@@ -36,16 +36,22 @@
 %bcond_without multi_semantics
 %endif
 
+%global commitnum 2887
+%global commit 97b8c0c2cd220b05bf2758803744bf9b58233595
+%global shortcommit %(c=%{commit}; echo ${c:0:7})
+
 Name:           lib%{libname}
 Version:        0.6.30
-Release:        2%{?dist}
+Release:        3%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
 URL:            https://github.com/openSUSE/libsolv
+%if %{defined commit}
+Source:         %{url}/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
+%else
 Source:         %{url}/archive/%{version}/%{name}-%{version}.tar.gz
-# https://bugzilla.redhat.com/show_bug.cgi?id=1483553
-Patch0:         0001-Fall-back-to-DB_PRIVATE-on-DB_VERSION_MISMATCH-from-.patch
+%endif
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -155,7 +161,7 @@ Python 3 version.
 %endif
 
 %prep
-%autosetup -p1
+%autosetup -p1 %{?commit:-n %{name}-%{commit}}
 mkdir build
 
 %build
@@ -288,6 +294,9 @@ popd
 %endif
 
 %changelog
+* Mon Nov 20 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-3.git.2887.97b8c0c
+- Update to latest snapshot
+
 * Mon Nov 06 2017 Panu Matilainen <pmatilai@redhat.com> - 0.6.30-2
 - Better error message on DB_VERSION_MISMATCH errors
 
