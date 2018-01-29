@@ -36,8 +36,8 @@
 %bcond_without multi_semantics
 %endif
 
-%global commitnum 2887
-%global commit 97b8c0c2cd220b05bf2758803744bf9b58233595
+%global commitnum 2898
+%global commit ae214a654c4c0f3b43ca763e70bde4793d00422a
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:           lib%{libname}
@@ -59,9 +59,6 @@ BuildRequires:  pkgconfig(rpm)
 BuildRequires:  zlib-devel
 # -DWITH_LIBXML2=ON
 BuildRequires:  libxml2-devel
-# -DFEDORA=1
-# -DENABLE_RPMDB=ON
-BuildRequires:  libdb-devel
 # -DENABLE_LZMA_COMPRESSION=ON
 BuildRequires:  xz-devel
 # -DENABLE_BZIP2_COMPRESSION=ON
@@ -162,48 +159,45 @@ Python 3 version.
 
 %prep
 %autosetup -p1 %{?commit:-n %{name}-%{commit}}
-mkdir build
 
 %build
-pushd build
-  %cmake                                          \
-    -DFEDORA=1                                    \
-    -DENABLE_RPMDB=ON                             \
-    -DENABLE_RPMDB_BYRPMHEADER=ON                 \
-    -DENABLE_RPMMD=ON                             \
-    %{?with_comps:-DENABLE_COMPS=ON}              \
-    %{?with_appdata:-DENABLE_APPDATA=ON}          \
-    -DUSE_VENDORDIRS=ON                           \
-    -DWITH_LIBXML2=ON                             \
-    -DENABLE_LZMA_COMPRESSION=ON                  \
-    -DENABLE_BZIP2_COMPRESSION=ON                 \
-    %{?with_helix_repo:-DENABLE_HELIXREPO=ON}     \
-    %{?with_suse_repo:-DENABLE_SUSEREPO=ON}       \
-    %{?with_debian_repo:-DENABLE_DEBIAN=ON}       \
-    %{?with_arch_repo:-DENABLE_ARCHREPO=ON}       \
-    %{?with_multi_semantics:-DMULTI_SEMANTICS=ON} \
-    %{?with_complex_deps:-DENABLE_COMPLEX_DEPS=1} \
-    %{?with_perl_bindings:-DENABLE_PERL=ON}       \
-    %{?with_ruby_bindings:-DENABLE_RUBY=ON}       \
+%cmake . -B"%{_vpath_builddir}"                 \
+  -DFEDORA=1                                    \
+  -DENABLE_RPMDB=ON                             \
+  -DENABLE_RPMDB_BYRPMHEADER=ON                 \
+  -DENABLE_RPMDB_LIBRPM=ON                      \
+  -DENABLE_RPMPKG_LIBRPM=ON                     \
+  -DENABLE_RPMMD=ON                             \
+  %{?with_comps:-DENABLE_COMPS=ON}              \
+  %{?with_appdata:-DENABLE_APPDATA=ON}          \
+  -DUSE_VENDORDIRS=ON                           \
+  -DWITH_LIBXML2=ON                             \
+  -DENABLE_LZMA_COMPRESSION=ON                  \
+  -DENABLE_BZIP2_COMPRESSION=ON                 \
+  %{?with_helix_repo:-DENABLE_HELIXREPO=ON}     \
+  %{?with_suse_repo:-DENABLE_SUSEREPO=ON}       \
+  %{?with_debian_repo:-DENABLE_DEBIAN=ON}       \
+  %{?with_arch_repo:-DENABLE_ARCHREPO=ON}       \
+  %{?with_multi_semantics:-DMULTI_SEMANTICS=ON} \
+  %{?with_complex_deps:-DENABLE_COMPLEX_DEPS=1} \
+  %{?with_perl_bindings:-DENABLE_PERL=ON}       \
+  %{?with_ruby_bindings:-DENABLE_RUBY=ON}       \
 %if %{with python_bindings}
-    -DENABLE_PYTHON=ON                            \
+  -DENABLE_PYTHON=ON                            \
 %if %{with python3}
-    -DENABLE_PYTHON3=ON                           \
+  -DENABLE_PYTHON3=ON                           \
 %endif
 %endif
-    ..
-  %make_build
-popd
+  %{nil}
+%make_build -C "%{_vpath_builddir}"
 
 %install
-pushd build
-  %make_install
-popd
+%make_install -C "%{_vpath_builddir}"
 
-mv %{buildroot}%{_bindir}/repo2solv.sh %{buildroot}%{_bindir}/repo2solv
+mv %{buildroot}%{_bindir}/repo2solv{.sh,}
 
 %check
-pushd build
+pushd "%{_vpath_builddir}"
   ctest -VV
 popd
 
@@ -294,6 +288,10 @@ popd
 %endif
 
 %changelog
+* Mon Jan 29 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-3.git.2898.ae214a6
+- Update to latest git version
+- Switch to use librpm for accessing headers / rpmdb
+
 * Mon Nov 20 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-3.git.2887.97b8c0c
 - Update to latest snapshot
 
