@@ -38,7 +38,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.30
-Release:        5%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
+Release:        6%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -54,6 +54,7 @@ BuildRequires:  gcc-c++
 BuildRequires:  ninja-build
 BuildRequires:  pkgconfig(rpm)
 BuildRequires:  zlib-devel
+BuildRequires:  libdb-devel
 # -DWITH_LIBXML2=ON
 BuildRequires:  libxml2-devel
 # -DENABLE_LZMA_COMPRESSION=ON
@@ -162,8 +163,8 @@ Python 3 version.
   -DFEDORA=1                                    \
   -DENABLE_RPMDB=ON                             \
   -DENABLE_RPMDB_BYRPMHEADER=ON                 \
-  -DENABLE_RPMDB_LIBRPM=ON                      \
-  -DENABLE_RPMPKG_LIBRPM=ON                     \
+  -DENABLE_RPMDB_LIBRPM=OFF                     \
+  -DENABLE_RPMPKG_LIBRPM=OFF                    \
   -DENABLE_RPMMD=ON                             \
   %{?with_comps:-DENABLE_COMPS=ON}              \
   %{?with_appdata:-DENABLE_APPDATA=ON}          \
@@ -279,6 +280,9 @@ mv %{buildroot}%{_bindir}/repo2solv{.sh,}
 %endif
 
 %changelog
+* Mon Jan 29 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-6.git.2898.ae214a6
+- Disable librpm from accessing DB
+
 * Mon Jan 29 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-5.git.2898.ae214a6
 - Allow disabling python2 bindings
 
