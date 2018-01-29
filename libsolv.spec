@@ -1,18 +1,14 @@
 %global libname solv
 
-%bcond_without python_bindings
+%bcond_without python2_bindings
 %if 0%{?rhel} && 0%{?rhel} <= 7
 %bcond_with perl_bindings
 %bcond_with ruby_bindings
-%if %{with python_bindings}
-  %bcond_with python3
-%endif
+%bcond_with python3_bindings
 %else
 %bcond_without perl_bindings
 %bcond_without ruby_bindings
-%if %{with python_bindings}
-  %bcond_without python3
-%endif
+%bcond_without python3_bindings
 %endif
 # Creates special prefixed pseudo-packages from appdata metadata
 %bcond_without appdata
@@ -42,7 +38,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.30
-Release:        4%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
+Release:        5%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -130,7 +126,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 Ruby bindings for the %{name} library.
 %endif
 
-%if %{with python_bindings}
+%if %{with python2_bindings}
 %package -n python2-%{libname}
 Summary:        Python bindings for the %{name} library
 %{?python_provide:%python_provide python2-%{libname}}
@@ -142,8 +138,9 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 Python bindings for the %{name} library.
 
 Python 2 version.
+%endif
 
-%if %{with python3}
+%if %{with python3_bindings}
 %package -n python3-%{libname}
 Summary:        Python bindings for the %{name} library
 %{?python_provide:%python_provide python3-%{libname}}
@@ -155,7 +152,6 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 Python bindings for the %{name} library.
 
 Python 3 version.
-%endif
 %endif
 
 %prep
@@ -183,12 +179,8 @@ Python 3 version.
   %{?with_complex_deps:-DENABLE_COMPLEX_DEPS=1} \
   %{?with_perl_bindings:-DENABLE_PERL=ON}       \
   %{?with_ruby_bindings:-DENABLE_RUBY=ON}       \
-%if %{with python_bindings}
-  -DENABLE_PYTHON=ON                            \
-%if %{with python3}
-  -DENABLE_PYTHON3=ON                           \
-%endif
-%endif
+  %{?with_python2_bindings:-DENABLE_PYTHON=ON}  \
+  %{?with_python3_bindings:-DENABLE_PYTHON3=ON} \
   %{nil}
 %ninja_build -C "%{_vpath_builddir}"
 
@@ -273,20 +265,23 @@ mv %{buildroot}%{_bindir}/repo2solv{.sh,}
 %{ruby_vendorarchdir}/%{libname}.so
 %endif
 
-%if %{with python_bindings}
+%if %{with python2_bindings}
 %files -n python2-%{libname}
 %{python2_sitearch}/_%{libname}.so
 %{python2_sitearch}/%{libname}.py*
+%endif
 
-%if %{with python3}
+%if %{with python3_bindings}
 %files -n python3-%{libname}
 %{python3_sitearch}/_%{libname}.so
 %{python3_sitearch}/%{libname}.py
 %{python3_sitearch}/__pycache__/%{libname}.*
 %endif
-%endif
 
 %changelog
+* Mon Jan 29 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-5.git.2898.ae214a6
+- Allow disabling python2 bindings
+
 * Mon Jan 29 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-4.git.2898.ae214a6
 - Switch to ninja-build
 
