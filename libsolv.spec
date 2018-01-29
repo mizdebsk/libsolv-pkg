@@ -42,7 +42,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.30
-Release:        3%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
+Release:        4%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -55,6 +55,7 @@ Source:         %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
+BuildRequires:  ninja-build
 BuildRequires:  pkgconfig(rpm)
 BuildRequires:  zlib-devel
 # -DWITH_LIBXML2=ON
@@ -161,7 +162,7 @@ Python 3 version.
 %autosetup -p1 %{?commit:-n %{name}-%{commit}}
 
 %build
-%cmake . -B"%{_vpath_builddir}"                 \
+%cmake . -B"%{_vpath_builddir}" -GNinja         \
   -DFEDORA=1                                    \
   -DENABLE_RPMDB=ON                             \
   -DENABLE_RPMDB_BYRPMHEADER=ON                 \
@@ -189,17 +190,15 @@ Python 3 version.
 %endif
 %endif
   %{nil}
-%make_build -C "%{_vpath_builddir}"
+%ninja_build -C "%{_vpath_builddir}"
 
 %install
-%make_install -C "%{_vpath_builddir}"
+%ninja_install -C "%{_vpath_builddir}"
 
 mv %{buildroot}%{_bindir}/repo2solv{.sh,}
 
 %check
-pushd "%{_vpath_builddir}"
-  ctest -VV
-popd
+%ninja_test -C "%{_vpath_builddir}"
 
 %post -p /sbin/ldconfig
 
@@ -288,6 +287,9 @@ popd
 %endif
 
 %changelog
+* Mon Jan 29 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-4.git.2898.ae214a6
+- Switch to ninja-build
+
 * Mon Jan 29 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-3.git.2898.ae214a6
 - Update to latest git version
 - Switch to use librpm for accessing headers / rpmdb
