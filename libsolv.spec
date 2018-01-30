@@ -32,13 +32,13 @@
 %bcond_without multi_semantics
 %endif
 
-%global commitnum 2900
-%global commit 8bdcce1f41a8a12ce4ca1b5ac9502a8ddca4a6e4
+%global commitnum 2901
+%global commit 47fbaa2a0892866d30ec0e1b4c885532d0aca7b8
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:           lib%{libname}
 Version:        0.6.30
-Release:        8%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
+Release:        9%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -163,7 +163,7 @@ Python 3 version.
   -DENABLE_RPMDB=ON                             \
   -DENABLE_RPMDB_BYRPMHEADER=ON                 \
   -DENABLE_RPMDB_LIBRPM=ON                      \
-  -DENABLE_RPMPKG_LIBRPM=OFF                    \
+  -DENABLE_RPMPKG_LIBRPM=ON                     \
   -DENABLE_RPMMD=ON                             \
   %{?with_comps:-DENABLE_COMPS=ON}              \
   %{?with_appdata:-DENABLE_APPDATA=ON}          \
@@ -277,6 +277,9 @@ mv %{buildroot}%{_bindir}/repo2solv{.sh,}
 %endif
 
 %changelog
+* Tue Jan 30 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-9.git.2901.47fbaa2
+- Use librpm to access rpm headers
+
 * Tue Jan 30 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-8.git.2900.8bdcce1
 - Use librpm to access DB
 
