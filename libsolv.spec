@@ -32,13 +32,13 @@
 %bcond_without multi_semantics
 %endif
 
-%global commitnum 2898
-%global commit ae214a654c4c0f3b43ca763e70bde4793d00422a
+%global commitnum 2900
+%global commit 8bdcce1f41a8a12ce4ca1b5ac9502a8ddca4a6e4
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:           lib%{libname}
 Version:        0.6.30
-Release:        7%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
+Release:        8%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -54,7 +54,6 @@ BuildRequires:  gcc-c++
 BuildRequires:  ninja-build
 BuildRequires:  pkgconfig(rpm)
 BuildRequires:  zlib-devel
-BuildRequires:  libdb-devel
 # -DWITH_LIBXML2=ON
 BuildRequires:  libxml2-devel
 # -DENABLE_LZMA_COMPRESSION=ON
@@ -163,7 +162,7 @@ Python 3 version.
   -DFEDORA=1                                    \
   -DENABLE_RPMDB=ON                             \
   -DENABLE_RPMDB_BYRPMHEADER=ON                 \
-  -DENABLE_RPMDB_LIBRPM=OFF                     \
+  -DENABLE_RPMDB_LIBRPM=ON                      \
   -DENABLE_RPMPKG_LIBRPM=OFF                    \
   -DENABLE_RPMMD=ON                             \
   %{?with_comps:-DENABLE_COMPS=ON}              \
@@ -278,6 +277,9 @@ mv %{buildroot}%{_bindir}/repo2solv{.sh,}
 %endif
 
 %changelog
+* Tue Jan 30 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-8.git.2900.8bdcce1
+- Use librpm to access DB
+
 * Tue Jan 30 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-7.git.2898.ae214a6
 - Switch to %%ldconfig_scriptlets
 
