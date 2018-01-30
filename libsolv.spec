@@ -38,7 +38,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.30
-Release:        6%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
+Release:        7%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -193,9 +193,7 @@ mv %{buildroot}%{_bindir}/repo2solv{.sh,}
 %check
 %ninja_test -C "%{_vpath_builddir}"
 
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+%ldconfig_scriptlets
 
 %files
 %license LICENSE*
@@ -280,6 +278,9 @@ mv %{buildroot}%{_bindir}/repo2solv{.sh,}
 %endif
 
 %changelog
+* Tue Jan 30 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-7.git.2898.ae214a6
+- Switch to %%ldconfig_scriptlets
+
 * Mon Jan 29 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-6.git.2898.ae214a6
 - Disable librpm from accessing DB
 
