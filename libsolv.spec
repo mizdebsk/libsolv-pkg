@@ -32,13 +32,13 @@
 %bcond_without multi_semantics
 %endif
 
-%global commitnum 2901
-%global commit 47fbaa2a0892866d30ec0e1b4c885532d0aca7b8
-%global shortcommit %(c=%{commit}; echo ${c:0:7})
+#global commitnum 2901
+#global commit 47fbaa2a0892866d30ec0e1b4c885532d0aca7b8
+#global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:           lib%{libname}
-Version:        0.6.30
-Release:        9%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
+Version:        0.6.31
+Release:        1%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -277,6 +277,9 @@ mv %{buildroot}%{_bindir}/repo2solv{.sh,}
 %endif
 
 %changelog
+* Wed Jan 31 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.31-1
+- Update to 0.6.31
+
 * Tue Jan 30 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.30-9.git.2901.47fbaa2
 - Use librpm to access rpm headers
 
