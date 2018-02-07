@@ -38,7 +38,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.31
-Release:        1%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
+Release:        2%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
 Summary:        Package dependency solver
 
 License:        BSD
@@ -277,6 +277,9 @@ mv %{buildroot}%{_bindir}/repo2solv{.sh,}
 %endif
 
 %changelog
+* Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 0.6.31-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
 * Wed Jan 31 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.31-1
 - Update to 0.6.31
 
