@@ -1,0 +1,35 @@
+From f13d313763e8c5b87d26f22163f36b41c7124c2f Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Sat, 24 Feb 2018 00:45:16 +0100
+Subject: [PATCH] Rich deps in SWIG
+
+---
+ bindings/solv.i | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/bindings/solv.i b/bindings/solv.i
+index add97a23..f8c0996a 100644
+--- a/bindings/solv.i
++++ b/bindings/solv.i
+@@ -635,6 +635,8 @@ typedef int bool;
+ #include "chksum.h"
+ #include "selection.h"
+ 
++#include "pool_parserpmrichdep.h"
++
+ #include "repo_write.h"
+ #if defined(ENABLE_RPMDB) || defined(ENABLE_RPMPKG)
+ #include "repo_rpmdb.h"
+@@ -1547,6 +1549,9 @@ typedef struct {
+   const char *get_rootdir(int flag) {
+     return pool_get_rootdir($self);
+   }
++  Dep *parserpmrichdep(const char *dep) {
++    return new_Dep($self, pool_parserpmrichdep($self, dep));
++  }
+ #if defined(SWIGPYTHON)
+   %{
+   SWIGINTERN int loadcallback(Pool *pool, Repodata *data, void *d) {
+-- 
+2.14.3
+

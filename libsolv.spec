@@ -38,7 +38,7 @@
 
 Name:           lib%{libname}
 Version:        0.6.32
-Release:        1%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}
+Release:        1%{?commit:.git.%{commitnum}.%{?shortcommit}}%{?dist}.mizdebsk
 Summary:        Package dependency solver
 
 License:        BSD
@@ -48,6 +48,8 @@ Source:         %{url}/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
 %else
 Source:         %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 %endif
+
+Patch1: 0001-Rich-deps-in-SWIG.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -277,6 +279,9 @@ mv %{buildroot}%{_bindir}/repo2solv{.sh,}
 %endif
 
 %changelog
+* Sat Feb 24 2018 Mikolaj Izdebski <mizdebsk@redhat.com> - 0.6.32-1.mizdebsk
+- Add patch for koschei
+
 * Tue Feb 13 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.6.32-1
 - Update to 0.6.32
 
